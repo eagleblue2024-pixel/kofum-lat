@@ -1,0 +1,55 @@
+{
+  "passed": 12,
+  "total": 12,
+  "scope": "Local fixture and mocked HTTP only; no device, live HTTP or playback verification.",
+  "results": [
+    {
+      "name": "extrae enlace exacto",
+      "passed": true
+    },
+    {
+      "name": "verifica IMDb",
+      "passed": true
+    },
+    {
+      "name": "rechaza otra película",
+      "passed": true
+    },
+    {
+      "name": "sin bloque",
+      "passed": true
+    },
+    {
+      "name": "JSON inválido",
+      "passed": true
+    },
+    {
+      "name": "sin players",
+      "passed": true
+    },
+    {
+      "name": "deduplica",
+      "passed": true
+    },
+    {
+      "name": "rechaza host ajeno",
+      "passed": true
+    },
+    {
+      "name": "no inventa resolución",
+      "passed": true
+    },
+    {
+      "name": "no ofrece reproducción ficticia",
+      "passed": true
+    },
+    {
+      "name": "diagnóstico con HTTP simulado",
+      "passed": true
+    },
+    {
+      "name": "diagnóstico no expone error sensible",
+      "passed": true
+    }
+  ]
+}
