@@ -1,14 +1,14 @@
 {
   "name": "Kofum Lat",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "scrapers": [
     {
       "id": "kofum-lat",
       "name": "Kofum Lat",
-      "description": "Experimental: Nemo latino. Diagnóstico de estructura sin contenido privado; reproducción no confirmada.",
-      "version": "0.1.4",
+      "description": "Experimental: Nemo latino, main.js del mismo origen y rutas literales. Reproducción no confirmada.",
+      "version": "0.1.5",
       "author": "Kofum Lat",
-      "filename": "providers/kofum-lat-0.1.4.js",
+      "filename": "providers/kofum-lat-0.1.5.js",
       "supportedTypes": [
         "movie"
       ],

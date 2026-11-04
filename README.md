@@ -1,16 +1,15 @@
-# Kofum Lat 0.1.1 experimental
+# Kofum Lat 0.1.5 experimental
 
-Plugin nativo de Nuvio: solo GitHub, sin Vercel, backend ni catálogo.
+Plugin nativo de Nuvio, solo GitHub. Sin Vercel, backend ni catálogo.
+Limitado a Buscando a Nemo latino (TMDb 12 / IMDb tt0266543), Streamwish. Sin búsqueda general.
 
-Prueba limitada a Nemo latino (TMDb 12 / IMDb tt0266543). Sin búsqueda general.
-Extrae el destino literal var url o un iframe único. Admite servidores enumerados y una fuente HLS explícita. Comprueba playlists, no segmentos ni decodificación. Conserva el master para calidad Auto, sin afirmar resolución máxima.
-Scripts packed, destinos desconocidos y redirecciones entre dominios no están soportados. No ejecuta JavaScript remoto ni elude CAPTCHA.
+Consulta el main.js exacto indicado por la página, solo del mismo origen. No ejecuta JavaScript remoto: únicamente admite listas literales main/dmca/rules y selecciona un dominio ya permitido. Conserva ruta, identificador y parámetros originales. No prueba el ID en dominios arbitrarios ni admite automáticamente hosts nuevos.
+Si el script está ofuscado o usa otro formato, devuelve routing_config_not_literal. No admite ofuscación general, CAPTCHA ni redirecciones HTTP entre dominios.
 
-17 pruebas locales con fixtures y HTTP simulado pasaron; están incluidas en el ZIP experimental adjunto en la conversación. No hay resolución final en vivo ni reproducción confirmada en 0.1.1. Las pruebas antiguas del repositorio son de 0.1.0.
-La captura del usuario solo valida ficha y reproductor intermedio en 0.1.0.
+19 pruebas locales con fixtures y HTTP simulado pasaron; disponibles en el ZIP experimental de la conversación. El main.js real y su routing siguen sin examinarse en vivo. No hay reproducción confirmada. Una playlist accesible no prueba segmentos ni decodificación.
+El cliente HTTP puede seguir redirecciones antes de inspeccionar la URL final. El filtrado de URL no verifica DNS: no es protección SSRF de backend.
+El diagnóstico muestra conteos, indicadores y dominio no admitido, sin URLs completas ni cuerpos. Sin telemetría adicional; consultas desde la conexión del dispositivo.
 
-Manifiesto tras publicar:
+Manifiesto después de publicar:
 https://raw.githubusercontent.com/eagleblue2024-pixel/kofum-lat/main/manifest.json
-Abre ajustes para el diagnóstico. Solo si obtiene una fuente candidata, prueba Nemo en el reproductor. HTTP 200 o HLS válido no prueban reproducción.
-
-Sin telemetría adicional ni URLs/cookies/cuerpos en el panel. Consultas desde tu conexión. El filtro URL no valida DNS ni evita que el cliente siga redirecciones antes de comprobar su URL final; no es protección SSRF para un backend.
+Abre ajustes y comparte el diagnóstico completo. Las pruebas antiguas del repositorio son históricas, no cubren esta versión.
