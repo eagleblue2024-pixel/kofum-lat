@@ -1,14 +1,14 @@
 {
   "name": "Kofum Lat",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "scrapers": [
     {
       "id": "kofum-lat",
       "name": "Kofum Lat",
-      "description": "Experimental: Nemo latino. Diagnóstico muestra solo el dominio no admitido; no reproducción confirmada.",
-      "version": "0.1.2",
+      "description": "Experimental: Nemo latino. Admite streamwish.to; resolución final y reproducción aún no confirmadas.",
+      "version": "0.1.3",
       "author": "Kofum Lat",
-      "filename": "providers/kofum-lat-0.1.2.js",
+      "filename": "providers/kofum-lat-0.1.3.js",
       "supportedTypes": [
         "movie"
       ],
