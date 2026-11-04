@@ -1,14 +1,14 @@
 {
   "name": "Kofum Lat",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "scrapers": [
     {
       "id": "kofum-lat",
       "name": "Kofum Lat",
-      "description": "Experimental: diagnóstico y extracción. Reproducción todavía no implementada.",
-      "version": "0.1.0",
+      "description": "Experimental: solo Nemo latino; HLS explícito. Sin búsqueda general ni reproducción confirmada.",
+      "version": "0.1.1",
       "author": "Kofum Lat",
-      "filename": "providers/kofum-lat.js?v=0.1.0",
+      "filename": "providers/kofum-lat-0.1.1.js",
       "supportedTypes": [
         "movie"
       ],
