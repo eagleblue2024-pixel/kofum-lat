@@ -5,6 +5,7 @@ on:
     paths:
       - .github/workflows/browser-routing.yml
       - tools/browser_routing.py
+      - tools/sandbox_launcher.py
   workflow_dispatch:
 permissions:
   contents: write
@@ -22,6 +23,7 @@ jobs:
       - name: Check policy and initialize sanitized status
         run: |
           python3 tools/browser_routing.py --self-test
+          python3 tools/sandbox_launcher.py --self-test
           mkdir -p analysis "$RUNNER_TEMP/kofum-home"
           echo "PLAYWRIGHT_BROWSERS_PATH=$RUNNER_TEMP/kofum-browsers" >> "$GITHUB_ENV"
           printf '%s\n' '{"status":"dependency_setup_not_completed","scope":"No browser or source execution result yet."}' > analysis/browser-routing-report.json
@@ -30,9 +32,9 @@ jobs:
           python3 -m venv "$RUNNER_TEMP/kofum-venv"
           "$RUNNER_TEMP/kofum-venv/bin/python" -m pip install --disable-pip-version-check --no-cache-dir playwright==1.64.1
           "$RUNNER_TEMP/kofum-venv/bin/python" -m playwright install --with-deps --only-shell chromium
-      - name: Observe with Chromium sandbox and stripped environment
+      - name: Observe with sandboxed Chrome preference and stripped environment
         run: |
-          env -i PATH="$PATH" HOME="$RUNNER_TEMP/kofum-home" TMPDIR="$RUNNER_TEMP" PLAYWRIGHT_BROWSERS_PATH="$PLAYWRIGHT_BROWSERS_PATH" "$RUNNER_TEMP/kofum-venv/bin/python" tools/browser_routing.py
+          env -i PATH="$PATH" HOME="$RUNNER_TEMP/kofum-home" TMPDIR="$RUNNER_TEMP" PLAYWRIGHT_BROWSERS_PATH="$PLAYWRIGHT_BROWSERS_PATH" "$RUNNER_TEMP/kofum-venv/bin/python" tools/sandbox_launcher.py
       - name: Publish sanitized browser report only
         if: always()
         env:
