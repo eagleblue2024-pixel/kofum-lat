@@ -1,0 +1,34 @@
+{
+  "requested_slug": "the-mongoose",
+  "status": "browser_probe_failed",
+  "phase": "browser_launch",
+  "playwright_version": "1.64.1",
+  "events": [
+    {
+      "stage": "movie",
+      "http_status": 200
+    },
+    {
+      "stage": "intermediate",
+      "http_status": 200
+    },
+    {
+      "stage": "server",
+      "http_status": 200
+    }
+  ],
+  "scope": "Instrumented isolated Chromium, temporary context, no personal cookies. Only the initial document and same-origin scripts are served through pinned HTTPS. New navigations and media are intercepted and aborted. Minimal response headers may differ from a normal browser. No video, raw source, complete URLs, paths, query parameters or trace files are published. This is not a playback test.",
+  "movie": {
+    "slug": "the-mongoose",
+    "imdb": "tt13611778",
+    "tmdb": "1294189",
+    "latino_servers": [
+      "streamwish"
+    ]
+  },
+  "server_host": "streamwish.to",
+  "server_characters": 819,
+  "instrumentation_skipped_for_integrity": false,
+  "error_class": "TargetClosedError",
+  "workflow_preceding_status": "success"
+}
