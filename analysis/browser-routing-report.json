@@ -1,7 +1,7 @@
 {
   "requested_slug": "the-mongoose",
-  "status": "browser_probe_failed",
-  "phase": "browser_launch",
+  "status": "navigation_candidate_observed",
+  "phase": "completed",
   "playwright_version": "1.64.1",
   "events": [
     {
@@ -14,6 +14,10 @@
     },
     {
       "stage": "server",
+      "http_status": 200
+    },
+    {
+      "stage": "browser_script",
       "http_status": 200
     }
   ],
@@ -29,6 +33,56 @@
   "server_host": "streamwish.to",
   "server_characters": 819,
   "instrumentation_skipped_for_integrity": false,
-  "error_class": "TargetClosedError",
+  "browser_version": "156.0.8078.79",
+  "main_script_sha256": "15b9ce8846e132e81a1f3bcad60f26e26ed8752dd2dc93f78b1b64284a1ef796",
+  "main_script_characters": 71214,
+  "observed_routing_lists": {},
+  "navigation_candidates": [
+    {
+      "host": "hglamioz.com",
+      "kind": "main_frame_navigation",
+      "original_path_preserved": true,
+      "media_suffix": "none"
+    }
+  ],
+  "media_candidates": [],
+  "blocked_resources": [
+    {
+      "host": "streamwish.to",
+      "kind": "stylesheet",
+      "original_path_preserved": false,
+      "media_suffix": "none"
+    },
+    {
+      "host": "static.cloudflareinsights.com",
+      "kind": "script",
+      "original_path_preserved": false,
+      "media_suffix": "none"
+    }
+  ],
+  "browser_counters": {
+    "initial": true,
+    "requests": 5,
+    "upstream": 1,
+    "script_errors": 0,
+    "popups_closed": 0
+  },
+  "launcher_adapter": "sandboxed_chrome_preference_v1",
+  "launch_environment": {
+    "sandbox_enforced": true,
+    "no_unsandboxed_fallback": true,
+    "system_chrome_available": true,
+    "running_as_root": false,
+    "home_writable": true,
+    "temporary_runtime_configured": true,
+    "os_user_namespace_restriction_flag": 1
+  },
+  "launch_attempts": [
+    {
+      "candidate": "system_chrome",
+      "sandbox": true,
+      "status": "started"
+    }
+  ],
   "workflow_preceding_status": "success"
 }
