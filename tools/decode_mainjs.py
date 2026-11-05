@@ -17,6 +17,10 @@ console.log = console.warn = console.error = () => {};
   const modulePath = process.argv[2];
   if (require(modulePath + '/package.json').version !== '2.4.6') throw Error('version_mismatch');
   const { Deobfuscator } = require(modulePath);
+  const acorn = require(require.resolve('acorn', {paths:[modulePath]}));
+  const { inspectAst, selfTest } = require(process.argv[5]);
+  selfTest();
+  function parse(text) {try{return acorn.parse(text,{ecmaVersion:'latest',sourceType:'script'});}catch(_){return acorn.parse(text,{ecmaVersion:'latest',sourceType:'module'});}}
   const tool = new Deobfuscator();
   const marker = '__kofum_sample_must_not_execute__';
   delete globalThis[marker];
@@ -24,14 +28,25 @@ console.log = console.warn = console.error = () => {};
   const checked = await tool.deobfuscateSource(fixture, {rename:false, loose:false});
   if (globalThis[marker] !== undefined || typeof checked !== 'string' || !checked.includes('medixiru.com')) throw Error('static_selftest_failed');
   const source = fs.readFileSync(process.argv[3], 'utf8');
+  const originalExpressions = inspectAst(parse(source));
   const result = await tool.deobfuscateSource(source, {rename:false, loose:false});
   if (typeof result !== 'string' || Buffer.byteLength(result, 'utf8') > 3000000) throw Error('output_too_large');
   fs.writeFileSync(process.argv[4], result, {mode:0o600});
+  const expressions = {original:originalExpressions,transformed:inspectAst(parse(result))};
+  const encoded = JSON.stringify(expressions);
+  if (Buffer.byteLength(encoded,'utf8') > 1000000) throw Error('expression_report_too_large');
+  fs.writeFileSync(process.argv[6],encoded,{mode:0o600});
 })().catch(() => { process.exitCode = 2; });
 """
 
 class TransformFailure(Exception):
     pass
+
+class DecodedText(str):
+    def __new__(cls, text, expressions):
+        value = super().__new__(cls,text)
+        value.expression_analysis = expressions
+        return value
 
 
 def decode_local(source):
@@ -50,21 +65,23 @@ def decode_local(source):
         if install.returncode:
             raise TransformFailure('dependency_install_failed')
         input_path, output_path = work/'input.js',work/'decoded.js'
+        expression_path = work/'expressions.json'
+        helper = Path(__file__).with_name('route_ast.cjs').resolve()
         wrapper = work/'transform.cjs'
         input_path.write_text(source,encoding='utf-8')
         input_path.chmod(0o600)
         wrapper.write_text(NODE_RUNNER,encoding='utf-8')
         try:
             result = subprocess.run(
-                [node,'--max-old-space-size=256',str(wrapper),str(work/'node_modules/deobfuscator'),str(input_path),str(output_path)],
+                [node,'--max-old-space-size=256',str(wrapper),str(work/'node_modules/deobfuscator'),str(input_path),str(output_path),str(helper),str(expression_path)],
                 cwd=directory,env=environment,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,timeout=30)
         except subprocess.TimeoutExpired:
             raise TransformFailure('transform_timeout') from None
-        if result.returncode or not output_path.exists():
+        if result.returncode or not output_path.exists() or not expression_path.exists():
             raise TransformFailure('transform_or_selftest_failed')
-        if output_path.stat().st_size > 3000000:
+        if output_path.stat().st_size > 3000000 or expression_path.stat().st_size > 1000000:
             raise TransformFailure('output_too_large')
-        return output_path.read_text(encoding='utf-8')
+        return DecodedText(output_path.read_text(encoding='utf-8'),json.loads(expression_path.read_text(encoding='utf-8')))
 
 
 def route_preview(lists, host):
@@ -84,7 +101,7 @@ def analyze(fetch=base.fetch_text, decoder=decode_local):
             captured['script'] = text
         return text
     source_report = base.analyze(capture)
-    report = {'tool':PACKAGE,'method':'AST transformation; no execution of the complete source script.',
+    report = {'tool':PACKAGE,'method':'AST transformation and structural expression inspection; no execution of the complete source script.',
               'source_inspection':source_report,'status':'not_completed'}
     if source_report.get('status') != 'static_inspection_complete' or 'script' not in captured:
         report['status'] = 'source_unavailable'
@@ -93,6 +110,7 @@ def analyze(fetch=base.fetch_text, decoder=decode_local):
         decoded = decoder(captured['script'])
         decoded_report = base.inspect_script(decoded)
         report['decoded_inspection'] = decoded_report
+        report['expression_analysis'] = getattr(decoded,'expression_analysis',{})
         report['routing'] = route_preview(decoded_report.get('literal_lists',{}),source_report.get('server_host',''))
         report['status'] = 'literal_routes_recovered' if report['routing']['status']=='literal_configuration_recovered' else 'deobfuscation_incomplete'
     except Exception as error:
