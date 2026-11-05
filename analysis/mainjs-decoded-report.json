@@ -1,6 +1,6 @@
 {
   "tool": "deobfuscator@2.4.6",
-  "method": "AST transformation; no execution of the complete source script.",
+  "method": "AST transformation and structural expression inspection; no execution of the complete source script.",
   "source_inspection": {
     "status": "static_inspection_complete",
     "scope": "Runner-side unauthenticated text inspection; no remote JavaScript execution or playback.",
@@ -76,6 +76,2657 @@
     "domain_shaped_literals": [],
     "domain_literals_truncated": false,
     "domain_note": "Static candidates only. Not verified routing, authorization or playable video sources."
+  },
+  "expression_analysis": {
+    "original": {
+      "method": "Structural AST data only. Strings are hashed, never evaluated.",
+      "routes": {
+        "main": {
+          "matches": 1,
+          "expression_shapes": [
+            {
+              "type": "ArrayExpression",
+              "elements": 3,
+              "sample": [
+                {
+                  "type": "BinaryExpression",
+                  "operator": "+",
+                  "left": {
+                    "type": "BinaryExpression",
+                    "operator": "+",
+                    "left": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier"
+                      },
+                      "arguments": [
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        }
+                      ]
+                    },
+                    "right": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier"
+                      },
+                      "arguments": [
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        }
+                      ]
+                    }
+                  },
+                  "right": {
+                    "type": "Literal",
+                    "kind": "string",
+                    "characters": 1,
+                    "sha256": "62c66a7a5dd70c3146618063c344e531e6d4b59e379808443ce962b3abd63c5a"
+                  }
+                },
+                {
+                  "type": "BinaryExpression",
+                  "operator": "+",
+                  "left": {
+                    "type": "BinaryExpression",
+                    "operator": "+",
+                    "left": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier"
+                      },
+                      "arguments": [
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        }
+                      ]
+                    },
+                    "right": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier"
+                      },
+                      "arguments": [
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        }
+                      ]
+                    }
+                  },
+                  "right": {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "name": "_0x30ce0b"
+                    },
+                    "arguments": [
+                      {
+                        "type": "Literal",
+                        "kind": "string",
+                        "characters": 4,
+                        "sha256": "7436ce5a845cfec1ffd4bd706775cb2c01c7ddf85ace8e52aa189d4a02695249"
+                      },
+                      {
+                        "type": "UnaryExpression",
+                        "operator": "-",
+                        "argument": {
+                          "type": "Literal"
+                        }
+                      },
+                      {
+                        "type": "UnaryExpression",
+                        "operator": "-",
+                        "argument": {
+                          "type": "Literal"
+                        }
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 111
+                      },
+                      {
+                        "type": "UnaryExpression",
+                        "operator": "-",
+                        "argument": {
+                          "type": "Literal"
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "BinaryExpression",
+                  "operator": "+",
+                  "left": {
+                    "type": "BinaryExpression",
+                    "operator": "+",
+                    "left": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier"
+                      },
+                      "arguments": [
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        }
+                      ]
+                    },
+                    "right": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier"
+                      },
+                      "arguments": [
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        }
+                      ]
+                    }
+                  },
+                  "right": {
+                    "type": "Literal",
+                    "kind": "string",
+                    "characters": 1,
+                    "sha256": "62c66a7a5dd70c3146618063c344e531e6d4b59e379808443ce962b3abd63c5a"
+                  }
+                }
+              ]
+            }
+          ],
+          "called_bindings": [
+            [
+              {
+                "identifier": "_0x253d26",
+                "binding_count": 1,
+                "summary_only": false,
+                "value_type": "FunctionDeclaration",
+                "parameters": [
+                  "_0x4fd0da",
+                  "_0x4d31a8",
+                  "_0x2b4fdf",
+                  "_0x407b39",
+                  "_0x4a89d3"
+                ],
+                "node_types": {
+                  "BlockStatement": 1,
+                  "ReturnStatement": 1,
+                  "CallExpression": 1,
+                  "Identifier": 3,
+                  "BinaryExpression": 1,
+                  "Literal": 1
+                },
+                "called_identifiers": [
+                  "_0x5447"
+                ],
+                "recognized_methods": [],
+                "return_shapes": [
+                  {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "name": "_0x5447"
+                    },
+                    "arguments": [
+                      {
+                        "type": "BinaryExpression",
+                        "operator": "-",
+                        "left": {
+                          "type": "Identifier",
+                          "name": "_0x4d31a8"
+                        },
+                        "right": {
+                          "type": "Literal",
+                          "kind": "number",
+                          "value": 436
+                        }
+                      },
+                      {
+                        "type": "Identifier",
+                        "name": "_0x407b39"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "identifier": "_0x30ce0b",
+                "binding_count": 1,
+                "summary_only": false,
+                "value_type": "FunctionDeclaration",
+                "parameters": [
+                  "_0x12eb3e",
+                  "_0x3b7ec7",
+                  "_0x5194c3",
+                  "_0x32f226",
+                  "_0xffb3cf"
+                ],
+                "node_types": {
+                  "BlockStatement": 1,
+                  "ReturnStatement": 1,
+                  "CallExpression": 1,
+                  "Identifier": 3,
+                  "BinaryExpression": 1,
+                  "UnaryExpression": 1,
+                  "Literal": 1
+                },
+                "called_identifiers": [
+                  "_0x5447"
+                ],
+                "recognized_methods": [],
+                "return_shapes": [
+                  {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "name": "_0x5447"
+                    },
+                    "arguments": [
+                      {
+                        "type": "BinaryExpression",
+                        "operator": "-",
+                        "left": {
+                          "type": "Identifier",
+                          "name": "_0x5194c3"
+                        },
+                        "right": {
+                          "type": "UnaryExpression",
+                          "operator": "-",
+                          "argument": {
+                            "type": "Literal",
+                            "kind": "number",
+                            "value": 608
+                          }
+                        }
+                      },
+                      {
+                        "type": "Identifier",
+                        "name": "_0x12eb3e"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "identifier": "_0x45e6ff",
+                "binding_count": 1,
+                "summary_only": false,
+                "value_type": "FunctionDeclaration",
+                "parameters": [
+                  "_0x2fd89b",
+                  "_0x2e6bb4",
+                  "_0xbd876c",
+                  "_0x3f315c",
+                  "_0x4ef165"
+                ],
+                "node_types": {
+                  "BlockStatement": 1,
+                  "ReturnStatement": 1,
+                  "CallExpression": 1,
+                  "Identifier": 3,
+                  "BinaryExpression": 1,
+                  "Literal": 1
+                },
+                "called_identifiers": [
+                  "_0x5447"
+                ],
+                "recognized_methods": [],
+                "return_shapes": [
+                  {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "name": "_0x5447"
+                    },
+                    "arguments": [
+                      {
+                        "type": "BinaryExpression",
+                        "operator": "-",
+                        "left": {
+                          "type": "Identifier",
+                          "name": "_0x3f315c"
+                        },
+                        "right": {
+                          "type": "Literal",
+                          "kind": "number",
+                          "value": 410
+                        }
+                      },
+                      {
+                        "type": "Identifier",
+                        "name": "_0xbd876c"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          ]
+        },
+        "dmca": {
+          "matches": 1,
+          "expression_shapes": [
+            {
+              "type": "ArrayExpression",
+              "elements": 5,
+              "sample": [
+                {
+                  "type": "BinaryExpression",
+                  "operator": "+",
+                  "left": {
+                    "type": "BinaryExpression",
+                    "operator": "+",
+                    "left": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier"
+                      },
+                      "arguments": [
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        }
+                      ]
+                    },
+                    "right": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier"
+                      },
+                      "arguments": [
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        }
+                      ]
+                    }
+                  },
+                  "right": {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "name": "_0xe8494e"
+                    },
+                    "arguments": [
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 1120
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 1310
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 1276
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "string",
+                        "characters": 4,
+                        "sha256": "877f05f6a98985262d397457806ed7ea362970d017a86c9b8831f6e728c138e9"
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 1453
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "BinaryExpression",
+                  "operator": "+",
+                  "left": {
+                    "type": "BinaryExpression",
+                    "operator": "+",
+                    "left": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier"
+                      },
+                      "arguments": [
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        }
+                      ]
+                    },
+                    "right": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier"
+                      },
+                      "arguments": [
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "UnaryExpression"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        }
+                      ]
+                    }
+                  },
+                  "right": {
+                    "type": "Literal",
+                    "kind": "string",
+                    "characters": 2,
+                    "sha256": "2e23f8b81d15612b4207db47bbf507d085ed15e02bb33a7d8ac657c511f5ecdc"
+                  }
+                },
+                {
+                  "type": "BinaryExpression",
+                  "operator": "+",
+                  "left": {
+                    "type": "BinaryExpression",
+                    "operator": "+",
+                    "left": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier"
+                      },
+                      "arguments": [
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        }
+                      ]
+                    },
+                    "right": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier"
+                      },
+                      "arguments": [
+                        {
+                          "type": "UnaryExpression"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "UnaryExpression"
+                        }
+                      ]
+                    }
+                  },
+                  "right": {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "name": "_0x3d55f3"
+                    },
+                    "arguments": [
+                      {
+                        "type": "UnaryExpression",
+                        "operator": "-",
+                        "argument": {
+                          "type": "Literal"
+                        }
+                      },
+                      {
+                        "type": "UnaryExpression",
+                        "operator": "-",
+                        "argument": {
+                          "type": "Literal"
+                        }
+                      },
+                      {
+                        "type": "UnaryExpression",
+                        "operator": "-",
+                        "argument": {
+                          "type": "Literal"
+                        }
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "string",
+                        "characters": 4,
+                        "sha256": "50abc6d57b44a7b47ef41a52841bd32c98dd1378c7d6e80316841616ec5ce42b"
+                      },
+                      {
+                        "type": "UnaryExpression",
+                        "operator": "-",
+                        "argument": {
+                          "type": "Literal"
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "BinaryExpression",
+                  "operator": "+",
+                  "left": {
+                    "type": "BinaryExpression",
+                    "operator": "+",
+                    "left": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier"
+                      },
+                      "arguments": [
+                        {
+                          "type": "UnaryExpression"
+                        },
+                        {
+                          "type": "UnaryExpression"
+                        },
+                        {
+                          "type": "UnaryExpression"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "UnaryExpression"
+                        }
+                      ]
+                    },
+                    "right": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier"
+                      },
+                      "arguments": [
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        }
+                      ]
+                    }
+                  },
+                  "right": {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "name": "_0x45e6ff"
+                    },
+                    "arguments": [
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 452
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 538
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "string",
+                        "characters": 4,
+                        "sha256": "40503810c775046eec7a37281c7864eca4f1974e7b27bd9874defbfa64373052"
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 717
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 633
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ],
+          "called_bindings": [
+            [
+              {
+                "identifier": "_0x253d26",
+                "binding_count": 1,
+                "summary_only": false,
+                "value_type": "FunctionDeclaration",
+                "parameters": [
+                  "_0x4fd0da",
+                  "_0x4d31a8",
+                  "_0x2b4fdf",
+                  "_0x407b39",
+                  "_0x4a89d3"
+                ],
+                "node_types": {
+                  "BlockStatement": 1,
+                  "ReturnStatement": 1,
+                  "CallExpression": 1,
+                  "Identifier": 3,
+                  "BinaryExpression": 1,
+                  "Literal": 1
+                },
+                "called_identifiers": [
+                  "_0x5447"
+                ],
+                "recognized_methods": [],
+                "return_shapes": [
+                  {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "name": "_0x5447"
+                    },
+                    "arguments": [
+                      {
+                        "type": "BinaryExpression",
+                        "operator": "-",
+                        "left": {
+                          "type": "Identifier",
+                          "name": "_0x4d31a8"
+                        },
+                        "right": {
+                          "type": "Literal",
+                          "kind": "number",
+                          "value": 436
+                        }
+                      },
+                      {
+                        "type": "Identifier",
+                        "name": "_0x407b39"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "identifier": "_0x30ce0b",
+                "binding_count": 1,
+                "summary_only": false,
+                "value_type": "FunctionDeclaration",
+                "parameters": [
+                  "_0x12eb3e",
+                  "_0x3b7ec7",
+                  "_0x5194c3",
+                  "_0x32f226",
+                  "_0xffb3cf"
+                ],
+                "node_types": {
+                  "BlockStatement": 1,
+                  "ReturnStatement": 1,
+                  "CallExpression": 1,
+                  "Identifier": 3,
+                  "BinaryExpression": 1,
+                  "UnaryExpression": 1,
+                  "Literal": 1
+                },
+                "called_identifiers": [
+                  "_0x5447"
+                ],
+                "recognized_methods": [],
+                "return_shapes": [
+                  {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "name": "_0x5447"
+                    },
+                    "arguments": [
+                      {
+                        "type": "BinaryExpression",
+                        "operator": "-",
+                        "left": {
+                          "type": "Identifier",
+                          "name": "_0x5194c3"
+                        },
+                        "right": {
+                          "type": "UnaryExpression",
+                          "operator": "-",
+                          "argument": {
+                            "type": "Literal",
+                            "kind": "number",
+                            "value": 608
+                          }
+                        }
+                      },
+                      {
+                        "type": "Identifier",
+                        "name": "_0x12eb3e"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "identifier": "_0x3d55f3",
+                "binding_count": 1,
+                "summary_only": false,
+                "value_type": "FunctionDeclaration",
+                "parameters": [
+                  "_0xf981ee",
+                  "_0x268ef5",
+                  "_0x450b82",
+                  "_0xb48f9",
+                  "_0x463af8"
+                ],
+                "node_types": {
+                  "BlockStatement": 1,
+                  "ReturnStatement": 1,
+                  "CallExpression": 1,
+                  "Identifier": 3,
+                  "BinaryExpression": 1,
+                  "UnaryExpression": 1,
+                  "Literal": 1
+                },
+                "called_identifiers": [
+                  "_0x5447"
+                ],
+                "recognized_methods": [],
+                "return_shapes": [
+                  {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "name": "_0x5447"
+                    },
+                    "arguments": [
+                      {
+                        "type": "BinaryExpression",
+                        "operator": "-",
+                        "left": {
+                          "type": "Identifier",
+                          "name": "_0x463af8"
+                        },
+                        "right": {
+                          "type": "UnaryExpression",
+                          "operator": "-",
+                          "argument": {
+                            "type": "Literal",
+                            "kind": "number",
+                            "value": 587
+                          }
+                        }
+                      },
+                      {
+                        "type": "Identifier",
+                        "name": "_0xb48f9"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          ]
+        },
+        "rules": {
+          "matches": 1,
+          "expression_shapes": [
+            {
+              "type": "ArrayExpression",
+              "elements": 3,
+              "sample": [
+                {
+                  "type": "BinaryExpression",
+                  "operator": "+",
+                  "left": {
+                    "type": "BinaryExpression",
+                    "operator": "+",
+                    "left": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier"
+                      },
+                      "arguments": [
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        }
+                      ]
+                    },
+                    "right": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier"
+                      },
+                      "arguments": [
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        }
+                      ]
+                    }
+                  },
+                  "right": {
+                    "type": "Literal",
+                    "kind": "string",
+                    "characters": 1,
+                    "sha256": "62c66a7a5dd70c3146618063c344e531e6d4b59e379808443ce962b3abd63c5a"
+                  }
+                },
+                {
+                  "type": "BinaryExpression",
+                  "operator": "+",
+                  "left": {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "name": "_0x45e6ff"
+                    },
+                    "arguments": [
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 911
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 1182
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "string",
+                        "characters": 4,
+                        "sha256": "b78e314673a22b259202a9db78c16a92a946ec7346e5ee420ede192533b268e7"
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 1170
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 915
+                      }
+                    ]
+                  },
+                  "right": {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "name": "_0x253d26"
+                    },
+                    "arguments": [
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 1365
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 1076
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 869
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "string",
+                        "characters": 4,
+                        "sha256": "52654c7f5a6732dfccb7f9fa595d70ec565b72232284b97ea34eb8918f9b3861"
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 876
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "BinaryExpression",
+                  "operator": "+",
+                  "left": {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "name": "_0x30ce0b"
+                    },
+                    "arguments": [
+                      {
+                        "type": "Literal",
+                        "kind": "string",
+                        "characters": 4,
+                        "sha256": "3d50d70765794d3145e278992f9088a1e41ecc1358685688eec1bc1e7a898bfb"
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 298
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 88
+                      },
+                      {
+                        "type": "UnaryExpression",
+                        "operator": "-",
+                        "argument": {
+                          "type": "Literal"
+                        }
+                      },
+                      {
+                        "type": "UnaryExpression",
+                        "operator": "-",
+                        "argument": {
+                          "type": "Literal"
+                        }
+                      }
+                    ]
+                  },
+                  "right": {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "name": "_0x45e6ff"
+                    },
+                    "arguments": [
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 772
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 860
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "string",
+                        "characters": 4,
+                        "sha256": "b563b8a2d24cb7dc459b866a362eb2c281f7ebd1131231ed7ebd14ea26ae1dff"
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 907
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 970
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ],
+          "called_bindings": [
+            [
+              {
+                "identifier": "_0x253d26",
+                "binding_count": 1,
+                "summary_only": false,
+                "value_type": "FunctionDeclaration",
+                "parameters": [
+                  "_0x4fd0da",
+                  "_0x4d31a8",
+                  "_0x2b4fdf",
+                  "_0x407b39",
+                  "_0x4a89d3"
+                ],
+                "node_types": {
+                  "BlockStatement": 1,
+                  "ReturnStatement": 1,
+                  "CallExpression": 1,
+                  "Identifier": 3,
+                  "BinaryExpression": 1,
+                  "Literal": 1
+                },
+                "called_identifiers": [
+                  "_0x5447"
+                ],
+                "recognized_methods": [],
+                "return_shapes": [
+                  {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "name": "_0x5447"
+                    },
+                    "arguments": [
+                      {
+                        "type": "BinaryExpression",
+                        "operator": "-",
+                        "left": {
+                          "type": "Identifier",
+                          "name": "_0x4d31a8"
+                        },
+                        "right": {
+                          "type": "Literal",
+                          "kind": "number",
+                          "value": 436
+                        }
+                      },
+                      {
+                        "type": "Identifier",
+                        "name": "_0x407b39"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "identifier": "_0x30ce0b",
+                "binding_count": 1,
+                "summary_only": false,
+                "value_type": "FunctionDeclaration",
+                "parameters": [
+                  "_0x12eb3e",
+                  "_0x3b7ec7",
+                  "_0x5194c3",
+                  "_0x32f226",
+                  "_0xffb3cf"
+                ],
+                "node_types": {
+                  "BlockStatement": 1,
+                  "ReturnStatement": 1,
+                  "CallExpression": 1,
+                  "Identifier": 3,
+                  "BinaryExpression": 1,
+                  "UnaryExpression": 1,
+                  "Literal": 1
+                },
+                "called_identifiers": [
+                  "_0x5447"
+                ],
+                "recognized_methods": [],
+                "return_shapes": [
+                  {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "name": "_0x5447"
+                    },
+                    "arguments": [
+                      {
+                        "type": "BinaryExpression",
+                        "operator": "-",
+                        "left": {
+                          "type": "Identifier",
+                          "name": "_0x5194c3"
+                        },
+                        "right": {
+                          "type": "UnaryExpression",
+                          "operator": "-",
+                          "argument": {
+                            "type": "Literal",
+                            "kind": "number",
+                            "value": 608
+                          }
+                        }
+                      },
+                      {
+                        "type": "Identifier",
+                        "name": "_0x12eb3e"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "identifier": "_0x45e6ff",
+                "binding_count": 1,
+                "summary_only": false,
+                "value_type": "FunctionDeclaration",
+                "parameters": [
+                  "_0x2fd89b",
+                  "_0x2e6bb4",
+                  "_0xbd876c",
+                  "_0x3f315c",
+                  "_0x4ef165"
+                ],
+                "node_types": {
+                  "BlockStatement": 1,
+                  "ReturnStatement": 1,
+                  "CallExpression": 1,
+                  "Identifier": 3,
+                  "BinaryExpression": 1,
+                  "Literal": 1
+                },
+                "called_identifiers": [
+                  "_0x5447"
+                ],
+                "recognized_methods": [],
+                "return_shapes": [
+                  {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "name": "_0x5447"
+                    },
+                    "arguments": [
+                      {
+                        "type": "BinaryExpression",
+                        "operator": "-",
+                        "left": {
+                          "type": "Identifier",
+                          "name": "_0x3f315c"
+                        },
+                        "right": {
+                          "type": "Literal",
+                          "kind": "number",
+                          "value": 410
+                        }
+                      },
+                      {
+                        "type": "Identifier",
+                        "name": "_0xbd876c"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          ]
+        }
+      },
+      "largest_arrays": [
+        {
+          "elements": 582,
+          "string_literals": 582
+        }
+      ]
+    },
+    "transformed": {
+      "method": "Structural AST data only. Strings are hashed, never evaluated.",
+      "routes": {
+        "main": {
+          "matches": 1,
+          "expression_shapes": [
+            {
+              "type": "ArrayExpression",
+              "elements": 3,
+              "sample": [
+                {
+                  "type": "BinaryExpression",
+                  "operator": "+",
+                  "left": {
+                    "type": "BinaryExpression",
+                    "operator": "+",
+                    "left": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier"
+                      },
+                      "arguments": [
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        }
+                      ]
+                    },
+                    "right": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier"
+                      },
+                      "arguments": [
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        }
+                      ]
+                    }
+                  },
+                  "right": {
+                    "type": "Literal",
+                    "kind": "string",
+                    "characters": 1,
+                    "sha256": "62c66a7a5dd70c3146618063c344e531e6d4b59e379808443ce962b3abd63c5a"
+                  }
+                },
+                {
+                  "type": "BinaryExpression",
+                  "operator": "+",
+                  "left": {
+                    "type": "BinaryExpression",
+                    "operator": "+",
+                    "left": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier"
+                      },
+                      "arguments": [
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        }
+                      ]
+                    },
+                    "right": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier"
+                      },
+                      "arguments": [
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        }
+                      ]
+                    }
+                  },
+                  "right": {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "name": "_0x30ce0b"
+                    },
+                    "arguments": [
+                      {
+                        "type": "Literal",
+                        "kind": "string",
+                        "characters": 4,
+                        "sha256": "7436ce5a845cfec1ffd4bd706775cb2c01c7ddf85ace8e52aa189d4a02695249"
+                      },
+                      {
+                        "type": "UnaryExpression",
+                        "operator": "-",
+                        "argument": {
+                          "type": "Literal"
+                        }
+                      },
+                      {
+                        "type": "UnaryExpression",
+                        "operator": "-",
+                        "argument": {
+                          "type": "Literal"
+                        }
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 111
+                      },
+                      {
+                        "type": "UnaryExpression",
+                        "operator": "-",
+                        "argument": {
+                          "type": "Literal"
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "BinaryExpression",
+                  "operator": "+",
+                  "left": {
+                    "type": "BinaryExpression",
+                    "operator": "+",
+                    "left": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier"
+                      },
+                      "arguments": [
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        }
+                      ]
+                    },
+                    "right": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier"
+                      },
+                      "arguments": [
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        }
+                      ]
+                    }
+                  },
+                  "right": {
+                    "type": "Literal",
+                    "kind": "string",
+                    "characters": 1,
+                    "sha256": "62c66a7a5dd70c3146618063c344e531e6d4b59e379808443ce962b3abd63c5a"
+                  }
+                }
+              ]
+            }
+          ],
+          "called_bindings": [
+            [
+              {
+                "identifier": "_0x253d26",
+                "binding_count": 1,
+                "summary_only": false,
+                "value_type": "FunctionDeclaration",
+                "parameters": [
+                  "_0x4fd0da",
+                  "_0x4d31a8",
+                  "_0x2b4fdf",
+                  "_0x407b39",
+                  "_0x4a89d3"
+                ],
+                "node_types": {
+                  "BlockStatement": 1,
+                  "ReturnStatement": 1,
+                  "CallExpression": 1,
+                  "Identifier": 3,
+                  "BinaryExpression": 1,
+                  "Literal": 1
+                },
+                "called_identifiers": [
+                  "_0x5447"
+                ],
+                "recognized_methods": [],
+                "return_shapes": [
+                  {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "name": "_0x5447"
+                    },
+                    "arguments": [
+                      {
+                        "type": "BinaryExpression",
+                        "operator": "-",
+                        "left": {
+                          "type": "Identifier",
+                          "name": "_0x4d31a8"
+                        },
+                        "right": {
+                          "type": "Literal",
+                          "kind": "number",
+                          "value": 436
+                        }
+                      },
+                      {
+                        "type": "Identifier",
+                        "name": "_0x407b39"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "identifier": "_0x30ce0b",
+                "binding_count": 1,
+                "summary_only": false,
+                "value_type": "FunctionDeclaration",
+                "parameters": [
+                  "_0x12eb3e",
+                  "_0x3b7ec7",
+                  "_0x5194c3",
+                  "_0x32f226",
+                  "_0xffb3cf"
+                ],
+                "node_types": {
+                  "BlockStatement": 1,
+                  "ReturnStatement": 1,
+                  "CallExpression": 1,
+                  "Identifier": 3,
+                  "BinaryExpression": 1,
+                  "UnaryExpression": 1,
+                  "Literal": 1
+                },
+                "called_identifiers": [
+                  "_0x5447"
+                ],
+                "recognized_methods": [],
+                "return_shapes": [
+                  {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "name": "_0x5447"
+                    },
+                    "arguments": [
+                      {
+                        "type": "BinaryExpression",
+                        "operator": "-",
+                        "left": {
+                          "type": "Identifier",
+                          "name": "_0x5194c3"
+                        },
+                        "right": {
+                          "type": "UnaryExpression",
+                          "operator": "-",
+                          "argument": {
+                            "type": "Literal",
+                            "kind": "number",
+                            "value": 608
+                          }
+                        }
+                      },
+                      {
+                        "type": "Identifier",
+                        "name": "_0x12eb3e"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "identifier": "_0x45e6ff",
+                "binding_count": 1,
+                "summary_only": false,
+                "value_type": "FunctionDeclaration",
+                "parameters": [
+                  "_0x2fd89b",
+                  "_0x2e6bb4",
+                  "_0xbd876c",
+                  "_0x3f315c",
+                  "_0x4ef165"
+                ],
+                "node_types": {
+                  "BlockStatement": 1,
+                  "ReturnStatement": 1,
+                  "CallExpression": 1,
+                  "Identifier": 3,
+                  "BinaryExpression": 1,
+                  "Literal": 1
+                },
+                "called_identifiers": [
+                  "_0x5447"
+                ],
+                "recognized_methods": [],
+                "return_shapes": [
+                  {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "name": "_0x5447"
+                    },
+                    "arguments": [
+                      {
+                        "type": "BinaryExpression",
+                        "operator": "-",
+                        "left": {
+                          "type": "Identifier",
+                          "name": "_0x3f315c"
+                        },
+                        "right": {
+                          "type": "Literal",
+                          "kind": "number",
+                          "value": 410
+                        }
+                      },
+                      {
+                        "type": "Identifier",
+                        "name": "_0xbd876c"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          ]
+        },
+        "dmca": {
+          "matches": 1,
+          "expression_shapes": [
+            {
+              "type": "ArrayExpression",
+              "elements": 5,
+              "sample": [
+                {
+                  "type": "BinaryExpression",
+                  "operator": "+",
+                  "left": {
+                    "type": "BinaryExpression",
+                    "operator": "+",
+                    "left": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier"
+                      },
+                      "arguments": [
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        }
+                      ]
+                    },
+                    "right": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier"
+                      },
+                      "arguments": [
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        }
+                      ]
+                    }
+                  },
+                  "right": {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "name": "_0xe8494e"
+                    },
+                    "arguments": [
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 1120
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 1310
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 1276
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "string",
+                        "characters": 4,
+                        "sha256": "877f05f6a98985262d397457806ed7ea362970d017a86c9b8831f6e728c138e9"
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 1453
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "BinaryExpression",
+                  "operator": "+",
+                  "left": {
+                    "type": "BinaryExpression",
+                    "operator": "+",
+                    "left": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier"
+                      },
+                      "arguments": [
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        }
+                      ]
+                    },
+                    "right": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier"
+                      },
+                      "arguments": [
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "UnaryExpression"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        }
+                      ]
+                    }
+                  },
+                  "right": {
+                    "type": "Literal",
+                    "kind": "string",
+                    "characters": 2,
+                    "sha256": "2e23f8b81d15612b4207db47bbf507d085ed15e02bb33a7d8ac657c511f5ecdc"
+                  }
+                },
+                {
+                  "type": "BinaryExpression",
+                  "operator": "+",
+                  "left": {
+                    "type": "BinaryExpression",
+                    "operator": "+",
+                    "left": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier"
+                      },
+                      "arguments": [
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        }
+                      ]
+                    },
+                    "right": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier"
+                      },
+                      "arguments": [
+                        {
+                          "type": "UnaryExpression"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "UnaryExpression"
+                        }
+                      ]
+                    }
+                  },
+                  "right": {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "name": "_0x3d55f3"
+                    },
+                    "arguments": [
+                      {
+                        "type": "UnaryExpression",
+                        "operator": "-",
+                        "argument": {
+                          "type": "Literal"
+                        }
+                      },
+                      {
+                        "type": "UnaryExpression",
+                        "operator": "-",
+                        "argument": {
+                          "type": "Literal"
+                        }
+                      },
+                      {
+                        "type": "UnaryExpression",
+                        "operator": "-",
+                        "argument": {
+                          "type": "Literal"
+                        }
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "string",
+                        "characters": 4,
+                        "sha256": "50abc6d57b44a7b47ef41a52841bd32c98dd1378c7d6e80316841616ec5ce42b"
+                      },
+                      {
+                        "type": "UnaryExpression",
+                        "operator": "-",
+                        "argument": {
+                          "type": "Literal"
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "BinaryExpression",
+                  "operator": "+",
+                  "left": {
+                    "type": "BinaryExpression",
+                    "operator": "+",
+                    "left": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier"
+                      },
+                      "arguments": [
+                        {
+                          "type": "UnaryExpression"
+                        },
+                        {
+                          "type": "UnaryExpression"
+                        },
+                        {
+                          "type": "UnaryExpression"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "UnaryExpression"
+                        }
+                      ]
+                    },
+                    "right": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier"
+                      },
+                      "arguments": [
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        }
+                      ]
+                    }
+                  },
+                  "right": {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "name": "_0x45e6ff"
+                    },
+                    "arguments": [
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 452
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 538
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "string",
+                        "characters": 4,
+                        "sha256": "40503810c775046eec7a37281c7864eca4f1974e7b27bd9874defbfa64373052"
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 717
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 633
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ],
+          "called_bindings": [
+            [
+              {
+                "identifier": "_0x253d26",
+                "binding_count": 1,
+                "summary_only": false,
+                "value_type": "FunctionDeclaration",
+                "parameters": [
+                  "_0x4fd0da",
+                  "_0x4d31a8",
+                  "_0x2b4fdf",
+                  "_0x407b39",
+                  "_0x4a89d3"
+                ],
+                "node_types": {
+                  "BlockStatement": 1,
+                  "ReturnStatement": 1,
+                  "CallExpression": 1,
+                  "Identifier": 3,
+                  "BinaryExpression": 1,
+                  "Literal": 1
+                },
+                "called_identifiers": [
+                  "_0x5447"
+                ],
+                "recognized_methods": [],
+                "return_shapes": [
+                  {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "name": "_0x5447"
+                    },
+                    "arguments": [
+                      {
+                        "type": "BinaryExpression",
+                        "operator": "-",
+                        "left": {
+                          "type": "Identifier",
+                          "name": "_0x4d31a8"
+                        },
+                        "right": {
+                          "type": "Literal",
+                          "kind": "number",
+                          "value": 436
+                        }
+                      },
+                      {
+                        "type": "Identifier",
+                        "name": "_0x407b39"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "identifier": "_0x30ce0b",
+                "binding_count": 1,
+                "summary_only": false,
+                "value_type": "FunctionDeclaration",
+                "parameters": [
+                  "_0x12eb3e",
+                  "_0x3b7ec7",
+                  "_0x5194c3",
+                  "_0x32f226",
+                  "_0xffb3cf"
+                ],
+                "node_types": {
+                  "BlockStatement": 1,
+                  "ReturnStatement": 1,
+                  "CallExpression": 1,
+                  "Identifier": 3,
+                  "BinaryExpression": 1,
+                  "UnaryExpression": 1,
+                  "Literal": 1
+                },
+                "called_identifiers": [
+                  "_0x5447"
+                ],
+                "recognized_methods": [],
+                "return_shapes": [
+                  {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "name": "_0x5447"
+                    },
+                    "arguments": [
+                      {
+                        "type": "BinaryExpression",
+                        "operator": "-",
+                        "left": {
+                          "type": "Identifier",
+                          "name": "_0x5194c3"
+                        },
+                        "right": {
+                          "type": "UnaryExpression",
+                          "operator": "-",
+                          "argument": {
+                            "type": "Literal",
+                            "kind": "number",
+                            "value": 608
+                          }
+                        }
+                      },
+                      {
+                        "type": "Identifier",
+                        "name": "_0x12eb3e"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "identifier": "_0x3d55f3",
+                "binding_count": 1,
+                "summary_only": false,
+                "value_type": "FunctionDeclaration",
+                "parameters": [
+                  "_0xf981ee",
+                  "_0x268ef5",
+                  "_0x450b82",
+                  "_0xb48f9",
+                  "_0x463af8"
+                ],
+                "node_types": {
+                  "BlockStatement": 1,
+                  "ReturnStatement": 1,
+                  "CallExpression": 1,
+                  "Identifier": 3,
+                  "BinaryExpression": 1,
+                  "UnaryExpression": 1,
+                  "Literal": 1
+                },
+                "called_identifiers": [
+                  "_0x5447"
+                ],
+                "recognized_methods": [],
+                "return_shapes": [
+                  {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "name": "_0x5447"
+                    },
+                    "arguments": [
+                      {
+                        "type": "BinaryExpression",
+                        "operator": "-",
+                        "left": {
+                          "type": "Identifier",
+                          "name": "_0x463af8"
+                        },
+                        "right": {
+                          "type": "UnaryExpression",
+                          "operator": "-",
+                          "argument": {
+                            "type": "Literal",
+                            "kind": "number",
+                            "value": 587
+                          }
+                        }
+                      },
+                      {
+                        "type": "Identifier",
+                        "name": "_0xb48f9"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          ]
+        },
+        "rules": {
+          "matches": 1,
+          "expression_shapes": [
+            {
+              "type": "ArrayExpression",
+              "elements": 3,
+              "sample": [
+                {
+                  "type": "BinaryExpression",
+                  "operator": "+",
+                  "left": {
+                    "type": "BinaryExpression",
+                    "operator": "+",
+                    "left": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier"
+                      },
+                      "arguments": [
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        }
+                      ]
+                    },
+                    "right": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier"
+                      },
+                      "arguments": [
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        },
+                        {
+                          "type": "Literal"
+                        }
+                      ]
+                    }
+                  },
+                  "right": {
+                    "type": "Literal",
+                    "kind": "string",
+                    "characters": 1,
+                    "sha256": "62c66a7a5dd70c3146618063c344e531e6d4b59e379808443ce962b3abd63c5a"
+                  }
+                },
+                {
+                  "type": "BinaryExpression",
+                  "operator": "+",
+                  "left": {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "name": "_0x45e6ff"
+                    },
+                    "arguments": [
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 911
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 1182
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "string",
+                        "characters": 4,
+                        "sha256": "b78e314673a22b259202a9db78c16a92a946ec7346e5ee420ede192533b268e7"
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 1170
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 915
+                      }
+                    ]
+                  },
+                  "right": {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "name": "_0x253d26"
+                    },
+                    "arguments": [
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 1365
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 1076
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 869
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "string",
+                        "characters": 4,
+                        "sha256": "52654c7f5a6732dfccb7f9fa595d70ec565b72232284b97ea34eb8918f9b3861"
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 876
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "BinaryExpression",
+                  "operator": "+",
+                  "left": {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "name": "_0x30ce0b"
+                    },
+                    "arguments": [
+                      {
+                        "type": "Literal",
+                        "kind": "string",
+                        "characters": 4,
+                        "sha256": "3d50d70765794d3145e278992f9088a1e41ecc1358685688eec1bc1e7a898bfb"
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 298
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 88
+                      },
+                      {
+                        "type": "UnaryExpression",
+                        "operator": "-",
+                        "argument": {
+                          "type": "Literal"
+                        }
+                      },
+                      {
+                        "type": "UnaryExpression",
+                        "operator": "-",
+                        "argument": {
+                          "type": "Literal"
+                        }
+                      }
+                    ]
+                  },
+                  "right": {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "name": "_0x45e6ff"
+                    },
+                    "arguments": [
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 772
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 860
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "string",
+                        "characters": 4,
+                        "sha256": "b563b8a2d24cb7dc459b866a362eb2c281f7ebd1131231ed7ebd14ea26ae1dff"
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 907
+                      },
+                      {
+                        "type": "Literal",
+                        "kind": "number",
+                        "value": 970
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ],
+          "called_bindings": [
+            [
+              {
+                "identifier": "_0x253d26",
+                "binding_count": 1,
+                "summary_only": false,
+                "value_type": "FunctionDeclaration",
+                "parameters": [
+                  "_0x4fd0da",
+                  "_0x4d31a8",
+                  "_0x2b4fdf",
+                  "_0x407b39",
+                  "_0x4a89d3"
+                ],
+                "node_types": {
+                  "BlockStatement": 1,
+                  "ReturnStatement": 1,
+                  "CallExpression": 1,
+                  "Identifier": 3,
+                  "BinaryExpression": 1,
+                  "Literal": 1
+                },
+                "called_identifiers": [
+                  "_0x5447"
+                ],
+                "recognized_methods": [],
+                "return_shapes": [
+                  {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "name": "_0x5447"
+                    },
+                    "arguments": [
+                      {
+                        "type": "BinaryExpression",
+                        "operator": "-",
+                        "left": {
+                          "type": "Identifier",
+                          "name": "_0x4d31a8"
+                        },
+                        "right": {
+                          "type": "Literal",
+                          "kind": "number",
+                          "value": 436
+                        }
+                      },
+                      {
+                        "type": "Identifier",
+                        "name": "_0x407b39"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "identifier": "_0x30ce0b",
+                "binding_count": 1,
+                "summary_only": false,
+                "value_type": "FunctionDeclaration",
+                "parameters": [
+                  "_0x12eb3e",
+                  "_0x3b7ec7",
+                  "_0x5194c3",
+                  "_0x32f226",
+                  "_0xffb3cf"
+                ],
+                "node_types": {
+                  "BlockStatement": 1,
+                  "ReturnStatement": 1,
+                  "CallExpression": 1,
+                  "Identifier": 3,
+                  "BinaryExpression": 1,
+                  "UnaryExpression": 1,
+                  "Literal": 1
+                },
+                "called_identifiers": [
+                  "_0x5447"
+                ],
+                "recognized_methods": [],
+                "return_shapes": [
+                  {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "name": "_0x5447"
+                    },
+                    "arguments": [
+                      {
+                        "type": "BinaryExpression",
+                        "operator": "-",
+                        "left": {
+                          "type": "Identifier",
+                          "name": "_0x5194c3"
+                        },
+                        "right": {
+                          "type": "UnaryExpression",
+                          "operator": "-",
+                          "argument": {
+                            "type": "Literal",
+                            "kind": "number",
+                            "value": 608
+                          }
+                        }
+                      },
+                      {
+                        "type": "Identifier",
+                        "name": "_0x12eb3e"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            [
+              {
+                "identifier": "_0x45e6ff",
+                "binding_count": 1,
+                "summary_only": false,
+                "value_type": "FunctionDeclaration",
+                "parameters": [
+                  "_0x2fd89b",
+                  "_0x2e6bb4",
+                  "_0xbd876c",
+                  "_0x3f315c",
+                  "_0x4ef165"
+                ],
+                "node_types": {
+                  "BlockStatement": 1,
+                  "ReturnStatement": 1,
+                  "CallExpression": 1,
+                  "Identifier": 3,
+                  "BinaryExpression": 1,
+                  "Literal": 1
+                },
+                "called_identifiers": [
+                  "_0x5447"
+                ],
+                "recognized_methods": [],
+                "return_shapes": [
+                  {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "name": "_0x5447"
+                    },
+                    "arguments": [
+                      {
+                        "type": "BinaryExpression",
+                        "operator": "-",
+                        "left": {
+                          "type": "Identifier",
+                          "name": "_0x3f315c"
+                        },
+                        "right": {
+                          "type": "Literal",
+                          "kind": "number",
+                          "value": 410
+                        }
+                      },
+                      {
+                        "type": "Identifier",
+                        "name": "_0xbd876c"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          ]
+        }
+      },
+      "largest_arrays": []
+    }
   },
   "routing": {
     "status": "configuration_still_not_literal"
