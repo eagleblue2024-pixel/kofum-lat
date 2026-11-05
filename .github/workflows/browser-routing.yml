@@ -1,0 +1,65 @@
+name: Observe Streamwish routing in isolated Chromium
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/browser-routing.yml
+      - tools/browser_routing.py
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: kofum-lat-isolated-browser
+  cancel-in-progress: false
+jobs:
+  observe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Check policy and initialize sanitized status
+        run: |
+          python3 tools/browser_routing.py --self-test
+          mkdir -p analysis "$RUNNER_TEMP/kofum-home"
+          echo "PLAYWRIGHT_BROWSERS_PATH=$RUNNER_TEMP/kofum-browsers" >> "$GITHUB_ENV"
+          printf '%s\n' '{"status":"dependency_setup_not_completed","scope":"No browser or source execution result yet."}' > analysis/browser-routing-report.json
+      - name: Install pinned Playwright and Chromium dependencies on ephemeral runner
+        run: |
+          python3 -m venv "$RUNNER_TEMP/kofum-venv"
+          "$RUNNER_TEMP/kofum-venv/bin/python" -m pip install --disable-pip-version-check --no-cache-dir playwright==1.64.1
+          "$RUNNER_TEMP/kofum-venv/bin/python" -m playwright install --with-deps --only-shell chromium
+      - name: Observe with Chromium sandbox and stripped environment
+        run: |
+          env -i PATH="$PATH" HOME="$RUNNER_TEMP/kofum-home" TMPDIR="$RUNNER_TEMP" PLAYWRIGHT_BROWSERS_PATH="$PLAYWRIGHT_BROWSERS_PATH" "$RUNNER_TEMP/kofum-venv/bin/python" tools/browser_routing.py
+      - name: Publish sanitized browser report only
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PRIOR_STATUS: ${{ job.status }}
+        run: |
+          python3 - <<'PY'
+          import base64, json, os, urllib.request, urllib.error
+          from pathlib import Path
+          report = Path('analysis/browser-routing-report.json')
+          data = json.loads(report.read_text(encoding='utf-8')) if report.exists() else {'status':'workflow_did_not_produce_report'}
+          data['workflow_preceding_status'] = os.environ['PRIOR_STATUS']
+          content = (json.dumps(data,ensure_ascii=False,indent=2)+'\n').encode('utf-8')
+          url = 'https://api.github.com/repos/eagleblue2024-pixel/kofum-lat/contents/analysis/browser-routing-report.json'
+          headers = {'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json','User-Agent':'Kofum-Lat-browser-observation'}
+          payload = {'message':'chore: publish sanitized isolated browser routing report','branch':'main','content':base64.b64encode(content).decode('ascii')}
+          try:
+              with urllib.request.urlopen(urllib.request.Request(url+'?ref=main',headers=headers),timeout=20) as r:
+                  payload['sha'] = json.load(r)['sha']
+          except urllib.error.HTTPError as e:
+              if e.code != 404:
+                  raise RuntimeError('report_read_http_'+str(e.code)) from None
+          request = urllib.request.Request(url,data=json.dumps(payload).encode(),headers={**headers,'Content-Type':'application/json'},method='PUT')
+          try:
+              with urllib.request.urlopen(request,timeout=20) as r:
+                  if r.status not in (200,201):
+                      raise RuntimeError('report_write_failed')
+          except urllib.error.HTTPError as e:
+              raise RuntimeError('report_write_http_'+str(e.code)) from None
+          PY
