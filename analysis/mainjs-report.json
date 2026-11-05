@@ -1,0 +1,50 @@
+{
+  "status": "static_inspection_complete",
+  "scope": "Runner-side unauthenticated text inspection; no remote JavaScript execution or playback.",
+  "events": [
+    {
+      "stage": "movie",
+      "http_status": 200
+    },
+    {
+      "stage": "intermediate",
+      "http_status": 200
+    },
+    {
+      "stage": "server",
+      "http_status": 200
+    },
+    {
+      "stage": "main_script",
+      "http_status": 200
+    }
+  ],
+  "player_origin": "fresh_movie_page",
+  "server_host": "streamwish.to",
+  "server_characters": 819,
+  "script": {
+    "characters": 71214,
+    "sha256_utf8": "15b9ce8846e132e81a1f3bcad60f26e26ed8752dd2dc93f78b1b64284a1ef796",
+    "hex_identifier_count": 1171,
+    "hex_escape_count": 41,
+    "unicode_escape_count": 0,
+    "packed_signature": false,
+    "atob_signature": false,
+    "array_rotation_indicators": false,
+    "parse_int_indicator": true,
+    "literal_lists": {
+      "main": {
+        "status": "not_literal_domains"
+      },
+      "dmca": {
+        "status": "not_literal_domains"
+      },
+      "rules": {
+        "status": "not_literal_domains"
+      }
+    },
+    "domain_shaped_literals": [],
+    "domain_literals_truncated": false,
+    "domain_note": "Static candidates only. Not verified routing, authorization or playable video sources."
+  }
+}
