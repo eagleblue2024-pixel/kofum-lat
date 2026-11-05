@@ -18,7 +18,8 @@ console.log = console.warn = console.error = () => {};
   if (require(modulePath + '/package.json').version !== '2.4.6') throw Error('version_mismatch');
   const { Deobfuscator } = require(modulePath);
   const acorn = require(require.resolve('acorn', {paths:[modulePath]}));
-  const { inspectAst, selfTest } = require(process.argv[5]);
+  const generate = require(require.resolve('@javascript-obfuscator/escodegen', {paths:[modulePath]}));
+  const { inspectAst, normalize, selfTest } = require(process.argv[5]);
   selfTest();
   function parse(text) {try{return acorn.parse(text,{ecmaVersion:'latest',sourceType:'script'});}catch(_){return acorn.parse(text,{ecmaVersion:'latest',sourceType:'module'});}}
   const tool = new Deobfuscator();
@@ -28,11 +29,14 @@ console.log = console.warn = console.error = () => {};
   const checked = await tool.deobfuscateSource(fixture, {rename:false, loose:false});
   if (globalThis[marker] !== undefined || typeof checked !== 'string' || !checked.includes('medixiru.com')) throw Error('static_selftest_failed');
   const source = fs.readFileSync(process.argv[3], 'utf8');
-  const originalExpressions = inspectAst(parse(source));
-  const result = await tool.deobfuscateSource(source, {rename:false, loose:false});
+  const ast = parse(source);
+  const originalExpressions = inspectAst(ast);
+  const normalization = normalize(ast);
+  const normalizedSource = generate.generate(ast);
+  const result = await tool.deobfuscateSource(normalizedSource, {rename:false, loose:false});
   if (typeof result !== 'string' || Buffer.byteLength(result, 'utf8') > 3000000) throw Error('output_too_large');
   fs.writeFileSync(process.argv[4], result, {mode:0o600});
-  const expressions = {original:originalExpressions,transformed:inspectAst(parse(result))};
+  const expressions = {original:originalExpressions,normalization,transformed:inspectAst(parse(result))};
   const encoded = JSON.stringify(expressions);
   if (Buffer.byteLength(encoded,'utf8') > 1000000) throw Error('expression_report_too_large');
   fs.writeFileSync(process.argv[6],encoded,{mode:0o600});
@@ -101,7 +105,7 @@ def analyze(fetch=base.fetch_text, decoder=decode_local):
             captured['script'] = text
         return text
     source_report = base.analyze(capture)
-    report = {'tool':PACKAGE,'method':'AST transformation and structural expression inspection; no execution of the complete source script.',
+    report = {'tool':PACKAGE,'method':'Restricted AST forwarding-call normalization and transformation; no execution of the complete source script.',
               'source_inspection':source_report,'status':'not_completed'}
     if source_report.get('status') != 'static_inspection_complete' or 'script' not in captured:
         report['status'] = 'source_unavailable'
