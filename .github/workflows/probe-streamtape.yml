@@ -1,0 +1,49 @@
+name: Probe Nemo Latino Streamtape
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/probe-streamtape.yml
+      - tools/probe_streamtape.py
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: kofum-lat-streamtape-probe
+  cancel-in-progress: false
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Test restricted expression parser offline
+        run: python3 tools/probe_streamtape.py --self-test
+      - name: Inspect Streamtape and read at most 1024 video response bytes
+        run: python3 tools/probe_streamtape.py
+      - name: Publish sanitized probe report only
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import base64, json, os, urllib.request, urllib.error
+          from pathlib import Path
+          url = 'https://api.github.com/repos/eagleblue2024-pixel/kofum-lat/contents/analysis/streamtape-report.json'
+          headers = {'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json','User-Agent':'Kofum-Lat-probe'}
+          payload = {'message':'chore: publish sanitized Streamtape probe','branch':'main','content':base64.b64encode(Path('analysis/streamtape-report.json').read_bytes()).decode('ascii')}
+          try:
+              with urllib.request.urlopen(urllib.request.Request(url+'?ref=main',headers=headers),timeout=20) as r:
+                  payload['sha'] = json.load(r)['sha']
+          except urllib.error.HTTPError as e:
+              if e.code != 404:
+                  raise RuntimeError('report_read_http_'+str(e.code)) from None
+          request = urllib.request.Request(url,data=json.dumps(payload).encode(),headers={**headers,'Content-Type':'application/json'},method='PUT')
+          try:
+              with urllib.request.urlopen(request,timeout=20) as r:
+                  if r.status not in (200,201):
+                      raise RuntimeError('report_write_failed')
+          except urllib.error.HTTPError as e:
+              raise RuntimeError('report_write_http_'+str(e.code)) from None
+          PY
