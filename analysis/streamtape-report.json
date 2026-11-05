@@ -1,0 +1,22 @@
+{
+  "source": "Gnula Nemo Latino Streamtape",
+  "status": "unsupported_or_failed",
+  "events": [
+    {
+      "stage": "movie",
+      "http_status": 200
+    },
+    {
+      "stage": "intermediate",
+      "http_status": 200
+    },
+    {
+      "stage": "server",
+      "http_status": 404
+    }
+  ],
+  "failure": {
+    "stage": "server",
+    "code": "network_or_parse_error"
+  }
+}
