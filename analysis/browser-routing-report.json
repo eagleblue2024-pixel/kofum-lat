@@ -39,7 +39,7 @@
   "observed_routing_lists": {},
   "navigation_candidates": [
     {
-      "host": "medixiru.com",
+      "host": "playnixes.com",
       "kind": "main_frame_navigation",
       "original_path_preserved": true,
       "media_suffix": "none"
@@ -84,10 +84,14 @@
       "status": "started"
     }
   ],
-  "additional_scope": "After closing Chromium, fetch only the exact observed hglamioz.com HTTPS destination if its path matches the original embed. Parse explicit HLS or bounded standard packed data without executing destination scripts. Inspect playlists only; no segments. Signed URLs stay in memory and are not published.",
+  "additional_scope": "After closing Chromium, fetch only the exact observed HTTPS destination on hglamioz.com or medixiru.com if its path matches the original embed and its host differs. Never replace a host or identifier. Parse explicit HLS or bounded standard packed data without executing destination scripts. Inspect playlists only; no segments. Signed URLs stay in memory and are not published.",
   "destination_validation": {
     "status": "not_attempted",
-    "code": "approved_destination_not_observed"
+    "code": "approved_destination_not_observed",
+    "approved_hosts": [
+      "hglamioz.com",
+      "medixiru.com"
+    ]
   },
   "workflow_preceding_status": "success"
 }
