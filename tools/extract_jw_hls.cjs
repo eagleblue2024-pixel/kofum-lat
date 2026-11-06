@@ -8,9 +8,10 @@ function field(n,key){if(!n||n.type!=='ObjectExpression'||n.properties.some(p=>p
 function hls(value){if(value.length>16000||/[^\x21-\x7e]/.test(value))fail('jw_source_url_rejected');let p;try{p=new URL(value);}catch(_){fail('jw_source_url_rejected');}if(p.protocol!=='https:'||p.username||p.password||p.hash||p.port&&p.port!=='443')fail('jw_source_url_rejected');return p.pathname.toLowerCase().endsWith('.m3u8');}
 function extract(source){
  if(source.length>1200000)fail('jw_input_limit');
- const ast=acorn.parse(source,{ecmaVersion:'latest',sourceType:'script'}),writes=new Map(),bindings=new Set(),setups=[],urls=new Set(),definitions=new Map(),parents=new WeakMap();
+ const ast=acorn.parse(source,{ecmaVersion:'latest',sourceType:'script'}),writes=new Map(),bindings=new Set(),setups=[],urls=new Set(),definitions=new Map(),parents=new WeakMap(),mutations=new Set(),escapes=new Set();
  walk(ast,n=>{for(const v of Object.values(n)){if(Array.isArray(v)){for(const c of v)if(c&&typeof c.type==='string')parents.set(c,n);}else if(v&&typeof v.type==='string')parents.set(v,n);}});
  const write=(name)=>writes.set(name,(writes.get(name)||0)+1);
+ const root=n=>{let depth=0;while(n&&n.type==='MemberExpression'&&depth++<32)n=n.object;return n&&n.type==='Identifier'?n.name:null;};
  walk(ast,n=>{
   if(n.type==='VariableDeclarator'&&n.id.type!=='Identifier')fail('jw_complex_binding');
   if((/Function/.test(n.type)||n.type==='ClassDeclaration'||n.type==='ClassExpression')&&n.id)write(n.id.name);
@@ -18,28 +19,54 @@ function extract(source){
    write(n.id.name);if(jwCall(n.init))bindings.add(n.id.name);
    const declaration=parents.get(n),scope=declaration&&parents.get(declaration);
    if(n.init&&scope&&(scope.type==='Program'||scope.type==='BlockStatement'))definitions.set(n.id.name,{value:n.init,scope,kind:declaration.kind});
+   if(n.init&&n.init.type==='Identifier')escapes.add(n.init.name);
   }
   if(n.type==='AssignmentExpression'&&n.left.type==='Identifier'){write(n.left.name);if(n.operator==='='&&jwCall(n.right))bindings.add(n.left.name);}
+  if(n.type==='AssignmentExpression'&&n.left.type==='MemberExpression')mutations.add(root(n.left));
+  if(n.type==='AssignmentExpression'&&n.right.type==='Identifier')escapes.add(n.right.name);
   if(n.type==='UpdateExpression'&&n.argument.type==='Identifier')write(n.argument.name);
+  if(n.type==='UpdateExpression'&&n.argument.type==='MemberExpression')mutations.add(root(n.argument));
+  if(n.type==='UnaryExpression'&&n.operator==='delete'&&n.argument.type==='MemberExpression')mutations.add(root(n.argument));
+  if(n.type==='CallExpression'||n.type==='NewExpression')for(const arg of n.arguments)if(arg.type==='Identifier')escapes.add(arg.name);
+  if(n.type==='ReturnStatement'&&n.argument&&n.argument.type==='Identifier')escapes.add(n.argument.name);
   if(/Function/.test(n.type)&&n.params)for(const p of n.params){if(p.type==='Identifier')write(p.name);else fail('jw_complex_binding');}
   if(n.type==='CatchClause'&&n.param){if(n.param.type==='Identifier')write(n.param.name);else fail('jw_complex_binding');}
  });
  if(writes.has('jwplayer'))fail('jw_constructor_shadowed');
  const type=n=>n&&/^[A-Za-z]{1,40}$/.test(n.type)?n.type.toLowerCase():'missing';
- function leftShape(n){
-  let shape=type(n);
+ function memberField(n){
+  if(n.object.type!=='Identifier')return 'unknown';
+  const d=definitions.get(n.object.name);if(!d||d.value.type!=='ObjectExpression')return 'unknown';
+  const props=d.value.properties;if(props.length>100)return 'large_object';
+  if(props.some(p=>p.type!=='Property'||p.computed))return 'dynamic_object';
+  let key=null;
+  if(!n.computed&&n.property.type==='Identifier')key=n.property.name;
+  else if(n.computed&&n.property.type==='Literal'&&['string','number'].includes(typeof n.property.value))key=String(n.property.value);
+  else if(n.computed&&n.property.type==='Identifier'){
+   const k=definitions.get(n.property.name);
+   if(k&&writes.get(n.property.name)===1&&k.value.end<n.property.start&&k.scope.start<=n.property.start&&k.scope.end>=n.property.end&&k.value.type==='Literal'&&['string','number'].includes(typeof k.value.value))key=String(k.value.value);
+  }
+  if(key===null)return 'unknown';
+  const found=props.filter(p=>(p.key.type==='Identifier'?p.key.name:String(p.key.value))===key);
+  if(found.length!==1)return found.length?'duplicate':'absent';
+  if(found[0].kind!=='init')return 'accessor';if(found[0].method)return 'method';return type(found[0].value);
+ }
+ function leftShape(n,depth=0){
+  let shape=type(n);if(depth>=2)return shape;
   if(n&&n.type==='Identifier'){
    const count=writes.get(n.name)||0,d=definitions.get(n.name);
    shape+='_writes_'+(count===0?'none':count===1?'one':'many')+'_init_'+(d?type(d.value):'unavailable');
    if(d)shape+='_order_'+(d.value.end<n.start?'before':'after')+'_scope_'+(d.scope.start<=n.start&&d.scope.end>=n.end?'visible':'outside')+'_kind_'+(['var','let','const'].includes(d.kind)?d.kind:'unknown');
   }else if(n&&n.type==='MemberExpression'){
    const known=n.object.type==='Identifier'&&['window','globalThis','document','location','navigator','localStorage','sessionStorage'].includes(n.object.name);
-   shape+='_object_'+(known?'known_global_name':type(n.object));
+   shape+='_object_'+(known?'known_global_name':leftShape(n.object,depth+1));
+   const name=root(n.object);shape+='_mutations_'+(mutations.has(name)?'observed':'not_observed')+'_escape_'+(escapes.has(name)?'possible':'not_observed');
+   shape+='_key_'+(!n.computed?'named':leftShape(n.property,depth+1))+'_field_'+memberField(n);
   }else if(n&&n.type==='CallExpression')shape+='_callee_'+type(n.callee);
   return shape;
  }
  function logicalFailure(n,error){
-  const cause=error&&typeof error.message==='string'&&/^jw_[a-z_]{1,100}$/.test(error.message)?error.message.slice(3):'nested_or_limit';
+  const cause=error&&typeof error.message==='string'&&/^jw_[a-z_]{1,1024}$/.test(error.message)?error.message.slice(3):'nested_or_limit';
   return 'jw_logical_'+({'||':'or','&&':'and','??':'nullish'}[n.operator]||'unknown')+'_left_'+leftShape(n.left)+'_cause_'+cause;
  }
  let resolutionSteps=0;
@@ -131,7 +158,7 @@ function selfTest(){let passed=0;const check=x=>{if(!x)fail('fixture_failed');pa
  for(const expression of ['""||'+u,u+'||fetch("/never")','true&&'+u,'null??'+u,'undefined??'+u,'false||'+u,'0||'+u,u+'??fetch("/never")','true?'+u+':fetch("/never")','false?fetch("/never"):'+u,'!false&&'+u])check(extract('jwplayer("v").setup({file:('+expression+')});').url===url);
  for(const [expression,code] of [
  ['unknown||'+u,'jw_logical_or_left_identifier_writes_none_init_unavailable_cause_source_identifier_unresolved'],
- ['window.u||'+u,'jw_logical_or_left_memberexpression_object_known_global_name_cause_nonliteral_source_memberexpression'],
+ ['window.u||'+u,'jw_logical_or_left_memberexpression_object_known_global_name_mutations_not_observed_escape_not_observed_key_named_field_unknown_cause_nonliteral_source_memberexpression'],
  ['fetch("/never")||'+u,'jw_logical_or_left_callexpression_callee_identifier_cause_nonliteral_source_callexpression'],
  ['false&&'+u,'jw_source_result_not_string'],
  ['false??'+u,'jw_source_result_not_string'],
@@ -147,5 +174,16 @@ function selfTest(){let passed=0;const check=x=>{if(!x)fail('fixture_failed');pa
  ['', 'const privateName="secret";','one_init_literal_order_after_scope_visible_kind_const','source_identifier_unresolved'],
  ['{const privateName="secret";}','','one_init_literal_order_before_scope_outside_kind_const','source_identifier_unresolved']
  ]){let actual='';try{extract(before+'jwplayer("v").setup({file:(privateName||'+u+')});'+after);}catch(error){actual=error.message;}check(actual===prefix+shape+'_cause_'+cause&& !/privateName|secret|https/.test(actual));}
- return {passed,total:48,scope:'Synthetic selection regression and structural diagnostics only. Error codes contain AST categories, not names or values. Acceptance and network policy unchanged.'};}
+ for(const [before,expression,fragment] of [
+ ['const privateObject={privateKey:"secret"};','privateObject.privateKey','init_objectexpression_order_before_scope_visible_kind_const'],
+ ['const privateObject={get privateKey(){throw Error("never");}};','privateObject.privateKey','field_accessor'],
+ ['const privateObject=fetch("/secret");','privateObject.privateKey','init_callexpression'],
+ ['const privateObject={privateKey:"secret"};privateObject.privateKey="changed";','privateObject.privateKey','mutations_observed'],
+ ['const privateObject={privateKey:"secret"};consume(privateObject);','privateObject.privateKey','escape_possible'],
+ ['const privateObject={privateKey:"secret"};const privateIndex="privateKey";','privateObject[privateIndex]','field_literal'],
+ ['','privateObject.privateKey','identifier_writes_none_init_unavailable'],
+ ['const privateObject={privateKey:"secret"};','privateObject[privateIndex]','key_identifier_writes_none_init_unavailable_field_unknown'],
+ ['const privateObject={privateKey:"secret"};','privateObject.privateKey||other.privateKey','field_literal_cause_nonliteral_source_memberexpression']
+ ]){let actual='';try{extract(before+'jwplayer("v").setup({file:('+expression+'||'+u+')});');}catch(error){actual=error.message;}check(actual.includes(fragment)&& !/privateObject|privateKey|privateIndex|secret|https/.test(actual));}
+ return {passed,total:57,scope:'Synthetic regressions and object/key provenance diagnostics only. Property access remains rejected. Mutation and escape flags are observations, not proof of immutability. No names or values published.'};}
 try{process.stdout.write(JSON.stringify(process.argv.includes('--self-test')?selfTest():decodeAndExtract(fs.readFileSync(0,'utf8'))));}catch(error){const code=/^jw_[a-z_]+$/.test(error.message)?error.message:'jw_parse_or_decode_failed';process.stdout.write(JSON.stringify({status:'unsupported',code}));process.exitCode=1;}
