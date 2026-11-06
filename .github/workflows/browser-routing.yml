@@ -9,6 +9,7 @@ on:
       - tools/follow_hglamioz.py
       - tools/capture_routing_lists.py
       - tools/instrument_routing.cjs
+      - tools/extract_jw_hls.cjs
   workflow_dispatch:
 permissions:
   contents: write

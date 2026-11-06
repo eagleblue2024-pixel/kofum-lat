@@ -26,20 +26,35 @@ function extract(source){
  });
  if(writes.has('jwplayer'))fail('jw_constructor_shadowed');
  let resolutionSteps=0;
- function staticString(n,depth=0,seen=new Set()){
+ function primitive(n,depth=0,seen=new Set()){
   if(!n)fail('jw_source_missing');
   if(depth>32||++resolutionSteps>1000)fail('jw_static_resolution_limit');
-  let value;
-  if(n.type==='Literal'){if(typeof n.value!=='string')fail('jw_source_literal_not_string');value=n.value;}
-  else if(n.type==='BinaryExpression'&&n.operator==='+')value=staticString(n.left,depth+1,seen)+staticString(n.right,depth+1,seen);
-  else if(n.type==='TemplateLiteral'&&n.expressions.length===0)value=n.quasis[0].value.cooked;
+  const next=x=>primitive(x,depth+1,seen);let value;
+  if(n.type==='Literal'){
+   if(n.value!==null&&!['string','boolean','number'].includes(typeof n.value)||typeof n.value==='number'&&!Number.isFinite(n.value))fail('jw_static_nonprimitive_literal');
+   value=n.value;
+  }else if(n.type==='BinaryExpression'&&n.operator==='+'){
+   const a=next(n.left),b=next(n.right);if(typeof a!=='string'||typeof b!=='string')fail('jw_static_concat_not_strings');value=a+b;
+  }else if(n.type==='TemplateLiteral'&&n.expressions.length===0)value=n.quasis[0].value.cooked;
+  else if(n.type==='LogicalExpression'){
+   let left;try{left=next(n.left);}catch(_){fail('jw_logical_'+({'||':'or','&&':'and','??':'nullish'}[n.operator]||'unknown')+'_left_unresolved');}
+   if(n.operator==='||')value=left?left:next(n.right);
+   else if(n.operator==='&&')value=left?next(n.right):left;
+   else if(n.operator==='??')value=left===null||left===undefined?next(n.right):left;
+   else fail('jw_logical_operator_unsupported');
+  }else if(n.type==='ConditionalExpression'){
+   let test;try{test=next(n.test);}catch(_){fail('jw_conditional_test_unresolved');}value=next(test?n.consequent:n.alternate);
+  }else if(n.type==='UnaryExpression'&&n.operator==='!')value=!next(n.argument);
+  else if(n.type==='UnaryExpression'&&n.operator==='void'){next(n.argument);value=undefined;}
+  else if(n.type==='Identifier'&&n.name==='undefined'&&!writes.has('undefined'))value=undefined;
   else if(n.type==='Identifier'){
    const d=definitions.get(n.name);
    if(!d||writes.get(n.name)!==1||seen.has(n.name)||d.value.end>=n.start||d.scope.start>n.start||d.scope.end<n.end)fail('jw_source_identifier_unresolved');
-   const next=new Set(seen);next.add(n.name);value=staticString(d.value,depth+1,next);
+   const chain=new Set(seen);chain.add(n.name);value=primitive(d.value,depth+1,chain);
   }else fail('jw_nonliteral_source_'+n.type.toLowerCase());
-  if(typeof value!=='string'||value.length>16000)fail('jw_static_string_limit');return value;
+  if(typeof value==='string'&&value.length>16000)fail('jw_static_string_limit');return value;
  }
+ function staticString(n){const value=primitive(n);if(typeof value!=='string')fail('jw_source_result_not_string');return value;}
  walk(ast,n=>{if(n.type==='CallExpression'&&n.callee.type==='MemberExpression'&&!n.callee.computed&&n.callee.property.name==='setup'){
   const obj=n.callee.object,linked=jwCall(obj)||obj.type==='Identifier'&&bindings.has(obj.name)&&writes.get(obj.name)===1;
   if(linked){if(n.arguments.length!==1)fail('jw_dynamic_configuration');setups.push(n.arguments[0]);}
@@ -95,5 +110,16 @@ function selfTest(){let passed=0;const check=x=>{if(!x)fail('fixture_failed');pa
  ['{const u='+JSON.stringify(url)+';}jwplayer("v").setup({file:u});','jw_source_identifier_unresolved'],
  ['const u=fetch("/private");jwplayer("v").setup({file:u});','jw_nonliteral_source_callexpression']
  ]){let actual='';try{extract(source);}catch(error){actual=error.message;}check(actual===code);}
- return {passed,total:24,scope:'Synthetic JW selection, bounded static strings and AST failure classification only. No remote code evaluated or network requested.'};}
+ const u=JSON.stringify(url);
+ for(const expression of ['""||'+u,u+'||fetch("/never")','true&&'+u,'null??'+u,'undefined??'+u,'false||'+u,'0||'+u,u+'??fetch("/never")','true?'+u+':fetch("/never")','false?fetch("/never"):'+u,'!false&&'+u])check(extract('jwplayer("v").setup({file:('+expression+')});').url===url);
+ for(const [expression,code] of [
+ ['unknown||'+u,'jw_logical_or_left_unresolved'],
+ ['window.u||'+u,'jw_logical_or_left_unresolved'],
+ ['fetch("/never")||'+u,'jw_logical_or_left_unresolved'],
+ ['false&&'+u,'jw_source_result_not_string'],
+ ['false??'+u,'jw_source_result_not_string'],
+ ['true&&fetch("/never")','jw_nonliteral_source_callexpression'],
+ ['fetch("/never")?'+u+':'+u,'jw_conditional_test_unresolved']
+ ]){let actual='';try{extract('jwplayer("v").setup({file:('+expression+')});');}catch(error){actual=error.message;}check(actual===code);}
+ return {passed,total:42,scope:'Synthetic JW selection and bounded static short-circuit evaluation only. Unknown conditions are rejected; no remote code evaluated or network requested.'};}
 try{process.stdout.write(JSON.stringify(process.argv.includes('--self-test')?selfTest():decodeAndExtract(fs.readFileSync(0,'utf8'))));}catch(error){const code=/^jw_[a-z_]+$/.test(error.message)?error.message:'jw_parse_or_decode_failed';process.stdout.write(JSON.stringify({status:'unsupported',code}));process.exitCode=1;}
