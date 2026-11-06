@@ -18,45 +18,93 @@ concurrency:
 jobs:
   observe:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v6
         with:
           persist-credentials: false
       - name: Initialize sanitized status then check Python policies
+        id: policies
+        timeout-minutes: 1
         run: |
           mkdir -p analysis "$RUNNER_TEMP/kofum-home"
           echo "PLAYWRIGHT_BROWSERS_PATH=$RUNNER_TEMP/kofum-browsers" >> "$GITHUB_ENV"
           printf '%s\n' '{"status":"dependency_setup_not_completed","scope":"No browser or source execution result yet."}' > analysis/browser-routing-report.json
+          printf '%s\n' python_policy_checks > analysis/browser-routing-stage.txt
           python3 tools/browser_routing.py --self-test
           python3 tools/sandbox_launcher.py --self-test
           python3 tools/follow_hglamioz.py --self-test
           python3 tools/capture_routing_lists.py --self-test
+          printf '%s\n' node_setup > analysis/browser-routing-stage.txt
       - uses: actions/setup-node@v6
+        id: node
+        timeout-minutes: 1
         with:
           node-version: '20.20.1'
       - name: Check bundled AST parser using synthetic fixtures only
-        run: node --expose-internals tools/instrument_routing.cjs --self-test
-      - name: Install pinned Playwright and Chromium dependencies on ephemeral runner
+        id: ast
+        timeout-minutes: 1
         run: |
+          printf '%s\n' ast_checks > analysis/browser-routing-stage.txt
+          node --expose-internals tools/instrument_routing.cjs --self-test
+      - name: Install pinned Python Playwright package
+        id: pip
+        timeout-minutes: 2
+        run: |
+          printf '%s\n' python_package_installation > analysis/browser-routing-stage.txt
           python3 -m venv "$RUNNER_TEMP/kofum-venv"
           "$RUNNER_TEMP/kofum-venv/bin/python" -m pip install --disable-pip-version-check --no-cache-dir playwright==1.64.1
-          "$RUNNER_TEMP/kofum-venv/bin/python" -m playwright install --with-deps --only-shell chromium
-      - name: Capture routing assignments without expanding destination authorization
+      - name: Install Chromium system dependencies
+        id: deps
+        timeout-minutes: 10
         run: |
+          printf '%s\n' system_dependencies > analysis/browser-routing-stage.txt
+          "$RUNNER_TEMP/kofum-venv/bin/python" -m playwright install-deps chromium
+      - name: Download pinned Chromium headless shell
+        id: download
+        timeout-minutes: 2
+        run: |
+          printf '%s\n' chromium_download > analysis/browser-routing-stage.txt
+          "$RUNNER_TEMP/kofum-venv/bin/python" -m playwright install --only-shell chromium
+      - name: Capture routing assignments without expanding destination authorization
+        id: capture
+        timeout-minutes: 2
+        run: |
+          printf '%s\n' browser_capture > analysis/browser-routing-stage.txt
           env -i PATH="$PATH" HOME="$RUNNER_TEMP/kofum-home" TMPDIR="$RUNNER_TEMP" PLAYWRIGHT_BROWSERS_PATH="$PLAYWRIGHT_BROWSERS_PATH" "$RUNNER_TEMP/kofum-venv/bin/python" tools/capture_routing_lists.py
-      - name: Publish sanitized browser report only
+          printf '%s\n' capture_process_completed > analysis/browser-routing-stage.txt
+      - name: Publish sanitized browser report and step outcomes only
         if: always()
+        timeout-minutes: 1
         env:
           GH_TOKEN: ${{ github.token }}
           PRIOR_STATUS: ${{ job.status }}
+          RUN_ID: ${{ github.run_id }}
+          HEAD_SHA: ${{ github.sha }}
+          POLICIES_OUTCOME: ${{ steps.policies.outcome }}
+          NODE_OUTCOME: ${{ steps.node.outcome }}
+          AST_OUTCOME: ${{ steps.ast.outcome }}
+          PIP_OUTCOME: ${{ steps.pip.outcome }}
+          DEPS_OUTCOME: ${{ steps.deps.outcome }}
+          DOWNLOAD_OUTCOME: ${{ steps.download.outcome }}
+          CAPTURE_OUTCOME: ${{ steps.capture.outcome }}
         run: |
           python3 - <<'PY'
-          import base64, json, os, urllib.request, urllib.error
+          import base64, json, os, re, urllib.request, urllib.error
           from pathlib import Path
           report = Path('analysis/browser-routing-report.json')
           data = json.loads(report.read_text(encoding='utf-8')) if report.exists() else {'status':'workflow_did_not_produce_report'}
           data['workflow_preceding_status'] = os.environ['PRIOR_STATUS']
+          stage_file = Path('analysis/browser-routing-stage.txt')
+          stage = stage_file.read_text(encoding='utf-8').strip() if stage_file.exists() else 'initialization_not_completed'
+          stages = {'initialization_not_completed','python_policy_checks','node_setup','ast_checks','python_package_installation','system_dependencies','chromium_download','browser_capture','capture_process_completed'}
+          data['workflow_stage'] = stage if stage in stages else 'unknown'
+          outcomes = {'success','failure','cancelled','skipped'}
+          data['workflow_steps'] = {key.lower(): os.environ.get(key+'_OUTCOME','') if os.environ.get(key+'_OUTCOME','') in outcomes else 'unknown' for key in ('POLICIES','NODE','AST','PIP','DEPS','DOWNLOAD','CAPTURE')}
+          run_id = os.environ.get('RUN_ID','')
+          head_sha = os.environ.get('HEAD_SHA','')
+          if re.fullmatch(r'[0-9]+',run_id): data['workflow_run_id'] = run_id
+          if re.fullmatch(r'[0-9a-f]{40}',head_sha): data['workflow_head_sha'] = head_sha
           content = (json.dumps(data,ensure_ascii=False,indent=2)+'\n').encode('utf-8')
           url = 'https://api.github.com/repos/eagleblue2024-pixel/kofum-lat/contents/analysis/browser-routing-report.json'
           headers = {'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json','User-Agent':'Kofum-Lat-browser-observation'}
