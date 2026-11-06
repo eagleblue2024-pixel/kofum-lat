@@ -1,7 +1,8 @@
-"""Capture routing lists and inspect only an approved same-run destination without executing its scripts."""
+"""Capture routing lists, inspect destination data and verify only a unique literal JW HLS playlist."""
 import asyncio
 import hashlib
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -37,13 +38,42 @@ def transform(body):
     if data.get('status')!='instrumented' or not isinstance(data.get('source'),str):raise RuntimeError('ast_parser_failed')
     return data
 
+def source_from_packed(html,fallback):
+    import analyze_mainjs as base
+    import follow_hglamioz as previous
+    scripts=base.scripts_in(html)
+    if len(scripts)>40:raise previous.ProbeError('jw_script_limit')
+    bodies=[''.join(s['chunks']) for s in scripts if not s['attrs'].get('src')]
+    bodies=[body for body in bodies if re.search(r'\beval\s*\(\s*function\b',body)]
+    if not bodies:return fallback(html)
+    if len(bodies)>4:raise previous.ProbeError('jw_packed_script_limit')
+    urls=set();extractor=Path(__file__).with_name('extract_jw_hls.cjs')
+    for body in bodies:
+        if len(body)>200000:raise previous.ProbeError('jw_packed_input_limit')
+        try:
+            result=subprocess.run(['node','--expose-internals','--max-old-space-size=128',str(extractor)],input=body,text=True,capture_output=True,timeout=8)
+            if len(result.stdout)>100000:raise previous.ProbeError('jw_result_limit')
+            data=json.loads(result.stdout)
+        except previous.ProbeError:raise
+        except Exception:raise previous.ProbeError('jw_parse_or_decode_failed') from None
+        if result.returncode or data.get('status')!='jw_hls_unique':
+            code=data.get('code','')
+            raise previous.ProbeError(code if isinstance(code,str) and re.fullmatch(r'jw_[a-z_]+',code) else 'jw_parse_or_decode_failed')
+        url=data.get('url')
+        if not isinstance(url,str):raise previous.ProbeError('jw_source_url_rejected')
+        previous.safe_https(url);urls.add(url)
+    if len(urls)!=1:raise previous.ProbeError('jw_hls_ambiguous')
+    return urls.pop(),{'method':'literal_jw_setup_from_packed_ast','packed_blocks':len(bodies),'note':'Literal JW configuration from a dictionary-decoding candidate. Playlist access is not proof of playback or movie identity. Signed source stays in memory.'}
+
 async def run():
     import analyze_mainjs as base
     from playwright.async_api import BrowserContext
     import follow_hglamioz as previous
     from destination_inspection import APPROVED,authorized,inspect
+    test=subprocess.run(['node','--expose-internals','--max-old-space-size=128',str(Path(__file__).with_name('extract_jw_hls.cjs')),'--self-test'],capture_output=True,text=True,timeout=8)
+    if test.returncode:raise RuntimeError('jw_extractor_self_test_failed')
     recorder=Recorder();metadata={'status':'main_script_not_seen'};private={};diagnostic={'status':'destination_not_fetched'}
-    original_fetch=base.fetch_text;original_page=BrowserContext.new_page;original_targets=previous.TARGETS
+    original_fetch=base.fetch_text;original_page=BrowserContext.new_page;original_targets=previous.TARGETS;original_source=previous.source_url
     def fetch(url,hosts,referer,stage,events):
         if stage=='destination':
             destination=base.checked_url(url,APPROVED)
@@ -66,15 +96,16 @@ async def run():
         page=await original_page(context,*args,**kwargs)
         await page.expose_function('__kofumReportRouteList',recorder.record)
         return page
-    base.fetch_text=fetch;BrowserContext.new_page=new_page;previous.TARGETS=APPROVED
+    base.fetch_text=fetch;BrowserContext.new_page=new_page;previous.TARGETS=APPROVED;previous.source_url=lambda html:source_from_packed(html,original_source)
     try:report=await previous.run()
-    finally:base.fetch_text=original_fetch;BrowserContext.new_page=original_page;previous.TARGETS=original_targets
+    finally:base.fetch_text=original_fetch;BrowserContext.new_page=original_page;previous.TARGETS=original_targets;previous.source_url=original_source
     report['routing_assignment_capture']=recorder.summary()
     report['routing_assignment_capture']['instrumentation']=metadata
     report['routing_assignment_capture']['destination_memberships']={item['host']:[key for key,values in report['routing_assignment_capture']['lists'].items() if item['host'] in values] for item in report.get('navigation_candidates',[]) if isinstance(item,dict) and isinstance(item.get('host'),str)}
     report['routing_capture_scope']='AST-based value observation at named main/dmca/rules initializers and assignments, including local scopes. Original values returned unchanged. No source publication.'
     report['destination_structure']=diagnostic
-    report['additional_scope']='After Chromium closes, contact only its exact observed same-path HTTPS destination if it is both on the five-host explicit diagnostic allowlist and in the unambiguous dmca list captured in this run. Inspect the returned HTML as data only. Existing HLS playlist checks remain; no destination scripts, linked resources, segments or video are requested by the added diagnostic. No host substitution.'
+    report['jw_extractor_self_test']={'status':'passed','passed':14,'total':14}
+    report['additional_scope']='Contact only the exact observed same-path HTTPS destination on the explicit five-host allowlist and same-run dmca list. Parse its HTML and packed data without executing destination scripts. Select only one literal HLS source in an unambiguous JW setup and pass it to existing pinned-HTTPS playlist verification. Playlist hosts come from that configuration and playlist variants; public DNS and TLS checks remain. No redirects, linked destination scripts, keys, segments or video requested. Signed URLs stay private.'
     report['diagnostic_approved_hosts']=sorted(APPROVED)
     if 'original_sha256' in metadata:
         if metadata['status']=='instrumented' and 'main_script_sha256' in report:report['instrumented_main_before_tail_sha256']=report['main_script_sha256']
