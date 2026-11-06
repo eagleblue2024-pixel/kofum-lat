@@ -1,4 +1,4 @@
-"""Capture routing lists, inspect destination data and verify only a unique literal JW HLS playlist."""
+"""Capture routing lists, inspect destination data and verify only a unique static JW HLS playlist."""
 import asyncio
 import hashlib
 import json
@@ -63,7 +63,7 @@ def source_from_packed(html,fallback):
         if not isinstance(url,str):raise previous.ProbeError('jw_source_url_rejected')
         previous.safe_https(url);urls.add(url)
     if len(urls)!=1:raise previous.ProbeError('jw_hls_ambiguous')
-    return urls.pop(),{'method':'literal_jw_setup_from_packed_ast','packed_blocks':len(bodies),'note':'Literal JW configuration from a dictionary-decoding candidate. Playlist access is not proof of playback or movie identity. Signed source stays in memory.'}
+    return urls.pop(),{'method':'static_jw_setup_from_packed_ast','packed_blocks':len(bodies),'note':'Bounded statically resolved strings in JW configuration from a dictionary-decoding candidate. Playlist access is not proof of playback or movie identity. Signed source stays in memory.'}
 
 async def run():
     import analyze_mainjs as base
@@ -72,6 +72,8 @@ async def run():
     from destination_inspection import APPROVED,authorized,inspect
     test=subprocess.run(['node','--expose-internals','--max-old-space-size=128',str(Path(__file__).with_name('extract_jw_hls.cjs')),'--self-test'],capture_output=True,text=True,timeout=8)
     if test.returncode:raise RuntimeError('jw_extractor_self_test_failed')
+    test_data=json.loads(test.stdout)
+    if not isinstance(test_data.get('passed'),int) or test_data['passed']!=test_data.get('total') or not 1<=test_data['passed']<=1000:raise RuntimeError('jw_extractor_self_test_failed')
     recorder=Recorder();metadata={'status':'main_script_not_seen'};private={};diagnostic={'status':'destination_not_fetched'}
     original_fetch=base.fetch_text;original_page=BrowserContext.new_page;original_targets=previous.TARGETS;original_source=previous.source_url
     def fetch(url,hosts,referer,stage,events):
@@ -104,8 +106,8 @@ async def run():
     report['routing_assignment_capture']['destination_memberships']={item['host']:[key for key,values in report['routing_assignment_capture']['lists'].items() if item['host'] in values] for item in report.get('navigation_candidates',[]) if isinstance(item,dict) and isinstance(item.get('host'),str)}
     report['routing_capture_scope']='AST-based value observation at named main/dmca/rules initializers and assignments, including local scopes. Original values returned unchanged. No source publication.'
     report['destination_structure']=diagnostic
-    report['jw_extractor_self_test']={'status':'passed','passed':14,'total':14}
-    report['additional_scope']='Contact only the exact observed same-path HTTPS destination on the explicit five-host allowlist and same-run dmca list. Parse its HTML and packed data without executing destination scripts. Select only one literal HLS source in an unambiguous JW setup and pass it to existing pinned-HTTPS playlist verification. Playlist hosts come from that configuration and playlist variants; public DNS and TLS checks remain. No redirects, linked destination scripts, keys, segments or video requested. Signed URLs stay private.'
+    report['jw_extractor_self_test']={'status':'passed','passed':test_data['passed'],'total':test_data['total']}
+    report['additional_scope']='Contact only the exact observed same-path HTTPS destination on the explicit five-host allowlist and same-run dmca list. Parse its HTML and packed data without executing destination scripts. Resolve only bounded literal strings, concatenations and uniquely initialized visible identifiers before use. Select one unambiguous static JW HLS source and pass it to existing pinned-HTTPS playlist verification. Playlist hosts come from that configuration and playlist variants; public DNS and TLS checks remain. No redirects, linked destination scripts, keys, segments or video requested. Signed URLs stay private.'
     report['diagnostic_approved_hosts']=sorted(APPROVED)
     if 'original_sha256' in metadata:
         if metadata['status']=='instrumented' and 'main_script_sha256' in report:report['instrumented_main_before_tail_sha256']=report['main_script_sha256']
