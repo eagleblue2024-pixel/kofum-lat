@@ -17,7 +17,7 @@ function extract(source){
   if(n.type==='VariableDeclarator'&&n.id.type==='Identifier'){
    write(n.id.name);if(jwCall(n.init))bindings.add(n.id.name);
    const declaration=parents.get(n),scope=declaration&&parents.get(declaration);
-   if(n.init&&scope&&(scope.type==='Program'||scope.type==='BlockStatement'))definitions.set(n.id.name,{value:n.init,scope});
+   if(n.init&&scope&&(scope.type==='Program'||scope.type==='BlockStatement'))definitions.set(n.id.name,{value:n.init,scope,kind:declaration.kind});
   }
   if(n.type==='AssignmentExpression'&&n.left.type==='Identifier'){write(n.left.name);if(n.operator==='='&&jwCall(n.right))bindings.add(n.left.name);}
   if(n.type==='UpdateExpression'&&n.argument.type==='Identifier')write(n.argument.name);
@@ -25,6 +25,23 @@ function extract(source){
   if(n.type==='CatchClause'&&n.param){if(n.param.type==='Identifier')write(n.param.name);else fail('jw_complex_binding');}
  });
  if(writes.has('jwplayer'))fail('jw_constructor_shadowed');
+ const type=n=>n&&/^[A-Za-z]{1,40}$/.test(n.type)?n.type.toLowerCase():'missing';
+ function leftShape(n){
+  let shape=type(n);
+  if(n&&n.type==='Identifier'){
+   const count=writes.get(n.name)||0,d=definitions.get(n.name);
+   shape+='_writes_'+(count===0?'none':count===1?'one':'many')+'_init_'+(d?type(d.value):'unavailable');
+   if(d)shape+='_order_'+(d.value.end<n.start?'before':'after')+'_scope_'+(d.scope.start<=n.start&&d.scope.end>=n.end?'visible':'outside')+'_kind_'+(['var','let','const'].includes(d.kind)?d.kind:'unknown');
+  }else if(n&&n.type==='MemberExpression'){
+   const known=n.object.type==='Identifier'&&['window','globalThis','document','location','navigator','localStorage','sessionStorage'].includes(n.object.name);
+   shape+='_object_'+(known?'known_global_name':type(n.object));
+  }else if(n&&n.type==='CallExpression')shape+='_callee_'+type(n.callee);
+  return shape;
+ }
+ function logicalFailure(n,error){
+  const cause=error&&typeof error.message==='string'&&/^jw_[a-z_]{1,100}$/.test(error.message)?error.message.slice(3):'nested_or_limit';
+  return 'jw_logical_'+({'||':'or','&&':'and','??':'nullish'}[n.operator]||'unknown')+'_left_'+leftShape(n.left)+'_cause_'+cause;
+ }
  let resolutionSteps=0;
  function primitive(n,depth=0,seen=new Set()){
   if(!n)fail('jw_source_missing');
@@ -37,7 +54,7 @@ function extract(source){
    const a=next(n.left),b=next(n.right);if(typeof a!=='string'||typeof b!=='string')fail('jw_static_concat_not_strings');value=a+b;
   }else if(n.type==='TemplateLiteral'&&n.expressions.length===0)value=n.quasis[0].value.cooked;
   else if(n.type==='LogicalExpression'){
-   let left;try{left=next(n.left);}catch(_){fail('jw_logical_'+({'||':'or','&&':'and','??':'nullish'}[n.operator]||'unknown')+'_left_unresolved');}
+   let left;try{left=next(n.left);}catch(error){fail(logicalFailure(n,error));}
    if(n.operator==='||')value=left?left:next(n.right);
    else if(n.operator==='&&')value=left?next(n.right):left;
    else if(n.operator==='??')value=left===null||left===undefined?next(n.right):left;
@@ -113,13 +130,22 @@ function selfTest(){let passed=0;const check=x=>{if(!x)fail('fixture_failed');pa
  const u=JSON.stringify(url);
  for(const expression of ['""||'+u,u+'||fetch("/never")','true&&'+u,'null??'+u,'undefined??'+u,'false||'+u,'0||'+u,u+'??fetch("/never")','true?'+u+':fetch("/never")','false?fetch("/never"):'+u,'!false&&'+u])check(extract('jwplayer("v").setup({file:('+expression+')});').url===url);
  for(const [expression,code] of [
- ['unknown||'+u,'jw_logical_or_left_unresolved'],
- ['window.u||'+u,'jw_logical_or_left_unresolved'],
- ['fetch("/never")||'+u,'jw_logical_or_left_unresolved'],
+ ['unknown||'+u,'jw_logical_or_left_identifier_writes_none_init_unavailable_cause_source_identifier_unresolved'],
+ ['window.u||'+u,'jw_logical_or_left_memberexpression_object_known_global_name_cause_nonliteral_source_memberexpression'],
+ ['fetch("/never")||'+u,'jw_logical_or_left_callexpression_callee_identifier_cause_nonliteral_source_callexpression'],
  ['false&&'+u,'jw_source_result_not_string'],
  ['false??'+u,'jw_source_result_not_string'],
  ['true&&fetch("/never")','jw_nonliteral_source_callexpression'],
  ['fetch("/never")?'+u+':'+u,'jw_conditional_test_unresolved']
  ]){let actual='';try{extract('jwplayer("v").setup({file:('+expression+')});');}catch(error){actual=error.message;}check(actual===code);}
- return {passed,total:42,scope:'Synthetic JW selection and bounded static short-circuit evaluation only. Unknown conditions are rejected; no remote code evaluated or network requested.'};}
+ const prefix='jw_logical_or_left_identifier_writes_';
+ for(const [before,after,shape,cause] of [
+ ['var privateName;','','one_init_unavailable','source_identifier_unresolved'],
+ ['const privateName=window.secretProperty;','','one_init_memberexpression_order_before_scope_visible_kind_const','nonliteral_source_memberexpression'],
+ ['const privateName=fetch("/secret");','','one_init_callexpression_order_before_scope_visible_kind_const','nonliteral_source_callexpression'],
+ ['let privateName="secret";privateName="changed";','','many_init_literal_order_before_scope_visible_kind_let','source_identifier_unresolved'],
+ ['', 'const privateName="secret";','one_init_literal_order_after_scope_visible_kind_const','source_identifier_unresolved'],
+ ['{const privateName="secret";}','','one_init_literal_order_before_scope_outside_kind_const','source_identifier_unresolved']
+ ]){let actual='';try{extract(before+'jwplayer("v").setup({file:(privateName||'+u+')});'+after);}catch(error){actual=error.message;}check(actual===prefix+shape+'_cause_'+cause&& !/privateName|secret|https/.test(actual));}
+ return {passed,total:48,scope:'Synthetic selection regression and structural diagnostics only. Error codes contain AST categories, not names or values. Acceptance and network policy unchanged.'};}
 try{process.stdout.write(JSON.stringify(process.argv.includes('--self-test')?selfTest():decodeAndExtract(fs.readFileSync(0,'utf8'))));}catch(error){const code=/^jw_[a-z_]+$/.test(error.message)?error.message:'jw_parse_or_decode_failed';process.stdout.write(JSON.stringify({status:'unsupported',code}));process.exitCode=1;}
