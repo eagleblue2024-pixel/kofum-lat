@@ -39,7 +39,7 @@
   "observed_routing_lists": {},
   "navigation_candidates": [
     {
-      "host": "hglamioz.com",
+      "host": "medixiru.com",
       "kind": "main_frame_navigation",
       "original_path_preserved": true,
       "media_suffix": "none"
@@ -48,14 +48,14 @@
   "media_candidates": [],
   "blocked_resources": [
     {
-      "host": "streamwish.to",
-      "kind": "stylesheet",
+      "host": "static.cloudflareinsights.com",
+      "kind": "script",
       "original_path_preserved": false,
       "media_suffix": "none"
     },
     {
-      "host": "static.cloudflareinsights.com",
-      "kind": "script",
+      "host": "streamwish.to",
+      "kind": "stylesheet",
       "original_path_preserved": false,
       "media_suffix": "none"
     }
@@ -84,5 +84,10 @@
       "status": "started"
     }
   ],
+  "additional_scope": "After closing Chromium, fetch only the exact observed hglamioz.com HTTPS destination if its path matches the original embed. Parse explicit HLS or bounded standard packed data without executing destination scripts. Inspect playlists only; no segments. Signed URLs stay in memory and are not published.",
+  "destination_validation": {
+    "status": "not_attempted",
+    "code": "approved_destination_not_observed"
+  },
   "workflow_preceding_status": "success"
 }
