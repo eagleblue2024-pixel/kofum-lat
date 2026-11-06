@@ -2,6 +2,8 @@
 import hashlib
 import json
 import re
+import subprocess
+from pathlib import Path
 from html.parser import HTMLParser
 from urllib.parse import urljoin,urlsplit
 
@@ -40,6 +42,31 @@ def signals(text):
     }
     return {key:bool(re.search(pattern,text,re.I)) for key,pattern in patterns.items()}
 
+def packed_summary(text):
+    if len(text)>200000:return {'status':'packed_input_limit'}
+    try:
+        parser=Path(__file__).with_name('instrument_routing.cjs')
+        result=subprocess.run(['node','--expose-internals','--max-old-space-size=128',str(parser),'--inspect-packed'],input=text,text=True,capture_output=True,timeout=5)
+        if result.returncode or len(result.stdout)>6000000:return {'status':'packed_parser_failed_or_limit'}
+        data=json.loads(result.stdout)
+        if data.get('status')!='packed_inspection_complete':return {'status':'packed_parser_failed_or_limit'}
+        output=[]
+        allowed={'decoded_candidate','unsupported_wrapper','nonliteral_arguments','data_limits_rejected','dictionary_count_mismatch','decoded_output_limit'}
+        for candidate in data.get('candidates',[])[:4]:
+            status=candidate.get('status');item={'status':status if status in allowed else 'unsupported_wrapper'}
+            for key in ('parameter_count','radix','word_count'):
+                value=candidate.get(key)
+                if isinstance(value,int) and 0<=value<=10000:item[key]=value
+            decoded=candidate.get('decoded')
+            if status=='decoded_candidate' and isinstance(decoded,str):
+                item['characters']=len(decoded);item['sha256']=hashlib.sha256(decoded.encode('utf-8')).hexdigest();item['signals']=signals(decoded)
+            output.append(item)
+        return {'status':'packed_inspection_complete','candidates':output,
+                'legacy_parameter_signature':bool(re.search(r'eval\s*\(\s*function\s*\(\s*p\s*,\s*a\s*,\s*c\s*,\s*k\s*,\s*e\s*,\s*[dr]\s*\)',text)),
+                'legacy_countdown_signature':bool(re.search(r'while\s*\(\s*c--\s*\)',text)),
+                'note':'Literal dictionary-substitution candidates only; not evaluated function output. Decoded source and links are never published or executed.'}
+    except Exception:return {'status':'packed_parser_failed_or_limit'}
+
 class Structure(HTMLParser):
     def __init__(self,base):
         super().__init__(convert_charrefs=True)
@@ -66,10 +93,14 @@ class Structure(HTMLParser):
 def inspect(html,base):
     if len(html)>3000000:return {'status':'input_limit'}
     try:
-        parser=Structure(base);parser.feed(html);scripts=[]
+        parser=Structure(base);parser.feed(html);scripts=[];packed_checks=0
         for item in parser.scripts:
             text=''.join(item.pop('chunks'));item['signals']=signals(text)
-            if not item['external']:item['inline_sha256']=hashlib.sha256(text.encode('utf-8')).hexdigest()
+            if not item['external']:
+                item['inline_sha256']=hashlib.sha256(text.encode('utf-8')).hexdigest()
+                if item['signals']['eval_function']:
+                    if packed_checks<4:item['packed_inspection']=packed_summary(text);packed_checks+=1
+                    else:item['packed_inspection']={'status':'packed_script_limit'}
             scripts.append(item)
         return {'status':'static_structure_complete','html_sha256':hashlib.sha256(html.encode('utf-8')).hexdigest(),
                 'tags':parser.tags,'external_script_count':parser.external,'inline_script_count':parser.inline,
