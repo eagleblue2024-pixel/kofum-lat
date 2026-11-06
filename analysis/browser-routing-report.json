@@ -1,5 +1,166 @@
 {
-  "status": "dependency_setup_not_completed",
-  "scope": "No browser or source execution result yet.",
-  "workflow_preceding_status": "cancelled"
+  "requested_slug": "the-mongoose",
+  "status": "navigation_candidate_observed",
+  "phase": "completed",
+  "playwright_version": "1.64.1",
+  "events": [
+    {
+      "stage": "movie",
+      "http_status": 200
+    },
+    {
+      "stage": "intermediate",
+      "http_status": 200
+    },
+    {
+      "stage": "server",
+      "http_status": 200
+    },
+    {
+      "stage": "browser_script",
+      "http_status": 200
+    },
+    {
+      "stage": "destination",
+      "http_status": 200
+    }
+  ],
+  "scope": "Instrumented isolated Chromium, temporary context, no personal cookies. Only the initial document and same-origin scripts are served through pinned HTTPS. New navigations and media are intercepted and aborted. Minimal response headers may differ from a normal browser. No video, raw source, complete URLs, paths, query parameters or trace files are published. This is not a playback test.",
+  "movie": {
+    "slug": "the-mongoose",
+    "imdb": "tt13611778",
+    "tmdb": "1294189",
+    "latino_servers": [
+      "streamwish"
+    ]
+  },
+  "server_host": "streamwish.to",
+  "server_characters": 819,
+  "instrumentation_skipped_for_integrity": false,
+  "browser_version": "156.0.8078.79",
+  "main_script_sha256": "15b9ce8846e132e81a1f3bcad60f26e26ed8752dd2dc93f78b1b64284a1ef796",
+  "main_script_characters": 71214,
+  "observed_routing_lists": {},
+  "navigation_candidates": [
+    {
+      "host": "medixiru.com",
+      "kind": "main_frame_navigation",
+      "original_path_preserved": true,
+      "media_suffix": "none"
+    }
+  ],
+  "media_candidates": [],
+  "blocked_resources": [
+    {
+      "host": "streamwish.to",
+      "kind": "stylesheet",
+      "original_path_preserved": false,
+      "media_suffix": "none"
+    },
+    {
+      "host": "static.cloudflareinsights.com",
+      "kind": "script",
+      "original_path_preserved": false,
+      "media_suffix": "none"
+    }
+  ],
+  "browser_counters": {
+    "initial": true,
+    "requests": 5,
+    "upstream": 1,
+    "script_errors": 0,
+    "popups_closed": 0
+  },
+  "launcher_adapter": "sandboxed_chrome_preference_v1",
+  "launch_environment": {
+    "sandbox_enforced": true,
+    "no_unsandboxed_fallback": true,
+    "system_chrome_available": true,
+    "running_as_root": false,
+    "home_writable": true,
+    "temporary_runtime_configured": true,
+    "os_user_namespace_restriction_flag": 1
+  },
+  "launch_attempts": [
+    {
+      "candidate": "system_chrome",
+      "sandbox": true,
+      "status": "started"
+    }
+  ],
+  "additional_scope": "After closing Chromium, fetch only the exact observed HTTPS destination on hglamioz.com or medixiru.com if its path matches the original embed and its host differs. Never replace a host or identifier. Parse explicit HLS or bounded standard packed data without executing destination scripts. Inspect playlists only; no segments. Signed URLs stay in memory and are not published.",
+  "destination_validation": {
+    "status": "unsupported_or_failed",
+    "host": "medixiru.com",
+    "approved_hosts": [
+      "hglamioz.com",
+      "medixiru.com"
+    ],
+    "note": "Exact browser-observed URL only; no identifier migration, remote script execution at destination, segment requests or playback test.",
+    "html_characters": 15861,
+    "iframe_count": 0,
+    "code": "hls_not_found"
+  },
+  "routing_assignment_capture": {
+    "status": "complete",
+    "lists": {
+      "dmca": [
+        "hgplaycdn.com",
+        "hglamioz.com",
+        "niramirus.com",
+        "playnixes.com",
+        "medixiru.com"
+      ],
+      "main": [
+        "hanerix.com",
+        "audinifer.com",
+        "vibuxer.com"
+      ],
+      "rules": [
+        "dhcplay.com",
+        "hglink.to",
+        "hgcloud.to"
+      ]
+    },
+    "ambiguous_keys": [],
+    "value_kinds": {
+      "dmca": "domains",
+      "main": "domains",
+      "rules": "domains"
+    },
+    "binding_calls": 3,
+    "note": "Observed source data, not authorization to contact these hosts or evidence of playback.",
+    "instrumentation": {
+      "status": "instrumented",
+      "original_sha256": "15b9ce8846e132e81a1f3bcad60f26e26ed8752dd2dc93f78b1b64284a1ef796",
+      "original_characters": 71214,
+      "counts": {
+        "main": 1,
+        "dmca": 1,
+        "rules": 1
+      },
+      "parser_version": "8.16.0",
+      "node_version": "v20.20.1"
+    },
+    "destination_memberships": {
+      "medixiru.com": [
+        "dmca"
+      ]
+    }
+  },
+  "routing_capture_scope": "AST-based value observation at named main/dmca/rules initializers and assignments, including local scopes. Original values returned unchanged. No additional host authorization or source publication.",
+  "instrumented_main_before_tail_sha256": "171be9e32b94f246b89c57b8553f4699ebce341a9334173ad79be65c2bb7a577",
+  "workflow_preceding_status": "success",
+  "workflow_stage": "capture_process_completed",
+  "workflow_steps": {
+    "policies": "success",
+    "node": "success",
+    "ast": "success",
+    "pip": "success",
+    "deps": "success",
+    "download": "success",
+    "capture": "success"
+  },
+  "workflow_run_id": "42208147982",
+  "workflow_head_sha": "a01cbe6e5404ad47940fcf2dfc0e0139a684d687"
 }
