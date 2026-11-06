@@ -52,14 +52,14 @@
   "media_candidates": [],
   "blocked_resources": [
     {
-      "host": "static.cloudflareinsights.com",
-      "kind": "script",
+      "host": "streamwish.to",
+      "kind": "stylesheet",
       "original_path_preserved": false,
       "media_suffix": "none"
     },
     {
-      "host": "streamwish.to",
-      "kind": "stylesheet",
+      "host": "static.cloudflareinsights.com",
+      "kind": "script",
       "original_path_preserved": false,
       "media_suffix": "none"
     }
@@ -100,7 +100,7 @@
       "playnixes.com"
     ],
     "note": "Exact browser-observed URL only; no identifier migration, remote script execution at destination, segment requests or playback test.",
-    "html_characters": 15852,
+    "html_characters": 15842,
     "iframe_count": 0,
     "code": "jw_url_absolute_parse_rejected"
   },
@@ -154,7 +154,7 @@
   "routing_capture_scope": "AST-based value observation at named main/dmca/rules initializers and assignments, including local scopes. Original values returned unchanged. No source publication.",
   "destination_structure": {
     "status": "static_structure_complete",
-    "html_sha256": "fee6a44cf40773fd1b40362ab4ac5ce889c11bdf71aa32dcf8285d49d0a4c8b6",
+    "html_sha256": "5a86c31f8533327e7fdf679cf37f1ad2a4894ea43203de35067f5729e83e8e9c",
     "tags": {
       "script": 16,
       "iframe": 0,
@@ -578,7 +578,7 @@
         "external": false,
         "type": "javascript_or_unspecified",
         "integrity_present": false,
-        "characters": 9312,
+        "characters": 9302,
         "signals": {
           "jwplayer": false,
           "playerjs": false,
@@ -605,7 +605,7 @@
           "cloudflare_challenge_marker": false,
           "file_missing_marker": false
         },
-        "inline_sha256": "309737f2446f5e50d3602d0878dcec7e2d16b64ebcd6913a6e94f2acd4e63942",
+        "inline_sha256": "4cd119a53102e2417b578ce657e0e0bb95e5a2ef6b82c01d1abc8b7fc42b0997",
         "packed_inspection": {
           "status": "packed_inspection_complete",
           "candidates": [
@@ -613,9 +613,9 @@
               "status": "decoded_candidate",
               "parameter_count": 6,
               "radix": 36,
-              "word_count": 495,
-              "characters": 10716,
-              "sha256": "b84e61a299cb7856dcca5cc63d7fb1c9fb5991ea146128045321cc9ab6af49ec",
+              "word_count": 493,
+              "characters": 10711,
+              "sha256": "6bade85d030a4176f23ddb4dc0361f804e0f668e4e5cbb974e8b333484e25c9e",
               "signals": {
                 "jwplayer": true,
                 "playerjs": false,
@@ -784,8 +784,8 @@
   },
   "jw_extractor_self_test": {
     "status": "passed",
-    "passed": 68,
-    "total": 68
+    "passed": 74,
+    "total": 74
   },
   "diagnostic_approved_hosts": [
     "hglamioz.com",
@@ -806,6 +806,6 @@
     "download": "success",
     "capture": "success"
   },
-  "workflow_run_id": "42314667263",
-  "workflow_head_sha": "7b8a928937f53e43b7544180355bec9359eaaba2"
+  "workflow_run_id": "42315318886",
+  "workflow_head_sha": "9d626d325cc659fff4a7a5ef978d2a1ba719a757"
 }
