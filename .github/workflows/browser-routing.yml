@@ -55,7 +55,8 @@ jobs:
           start = source.index('function hls(value){')
           end = source.index('\nfunction extract(source){', start)
           old = source[start:end]
-          if old.count("fail('jw_source_url_rejected')") != 3:
+          old_count = old.count("fail('jw_source_url_rejected')")
+          if old_count != 3:
               raise RuntimeError('unexpected_url_validator_shape')
           new = r"function hls(value){if(value.length>16000)fail('jw_url_length_rejected');if(/[^\x21-\x7e]/.test(value))fail('jw_url_characters_rejected');let p;try{p=new URL(value);}catch(_){fail('jw_url_absolute_parse_rejected');}if(p.protocol!=='https:')fail('jw_url_protocol_rejected');if(p.username||p.password)fail('jw_url_credentials_rejected');if(p.hash)fail('jw_url_fragment_rejected');if(p.port&&p.port!=='443')fail('jw_url_port_rejected');return p.pathname.toLowerCase().endsWith('.m3u8');}"
           p.write_text(source[:start] + new + source[end:])
@@ -89,7 +90,7 @@ jobs:
           printf '%s\n' capture_process_completed > analysis/browser-routing-stage.txt
       - name: Publish sanitized browser report and step outcomes only
         if: always()
-        timeout-minutes: 1
+        timeout-minutes: 2
         env:
           GH_TOKEN: ${{ github.token }}
           PRIOR_STATUS: ${{ job.status }}
@@ -104,7 +105,7 @@ jobs:
           CAPTURE_OUTCOME: ${{ steps.capture.outcome }}
         run: |
           python3 - <<'PY'
-          import base64, json, os, re, urllib.request, urllib.error
+          import base64, json, os, re, time, urllib.request, urllib.error
           from pathlib import Path
           report = Path('analysis/browser-routing-report.json')
           data = json.loads(report.read_text(encoding='utf-8')) if report.exists() else {'status':'workflow_did_not_produce_report'}
@@ -120,20 +121,45 @@ jobs:
           if re.fullmatch(r'[0-9]+',run_id): data['workflow_run_id'] = run_id
           if re.fullmatch(r'[0-9a-f]{40}',head_sha): data['workflow_head_sha'] = head_sha
           content = (json.dumps(data,ensure_ascii=False,indent=2)+'\n').encode('utf-8')
+          report.parent.mkdir(parents=True,exist_ok=True)
+          report.write_bytes(content)
           url = 'https://api.github.com/repos/eagleblue2024-pixel/kofum-lat/contents/analysis/browser-routing-report.json'
           headers = {'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json','User-Agent':'Kofum-Lat-browser-observation'}
-          payload = {'message':'chore: publish sanitized isolated browser routing report','branch':'main','content':base64.b64encode(content).decode('ascii')}
-          try:
-              with urllib.request.urlopen(urllib.request.Request(url+'?ref=main',headers=headers),timeout=20) as r:
-                  payload['sha'] = json.load(r)['sha']
-          except urllib.error.HTTPError as e:
-              if e.code != 404:
-                  raise RuntimeError('report_read_http_'+str(e.code)) from None
-          request = urllib.request.Request(url,data=json.dumps(payload).encode(),headers={**headers,'Content-Type':'application/json'},method='PUT')
-          try:
-              with urllib.request.urlopen(request,timeout=20) as r:
-                  if r.status not in (200,201):
-                      raise RuntimeError('report_write_failed')
-          except urllib.error.HTTPError as e:
-              raise RuntimeError('report_write_http_'+str(e.code)) from None
+          def publish_report(url, headers, content, fetch, wait):
+              retryable = {409, 429, 500, 502, 503, 504}
+              for attempt in range(3):
+                  try:
+                      payload = {'message':'chore: publish sanitized isolated browser routing report','branch':'main','content':base64.b64encode(content).decode('ascii')}
+                      try:
+                          with fetch(urllib.request.Request(url+'?ref=main',headers=headers),timeout=10) as response:
+                              remote = json.load(response)
+                          if base64.b64decode(remote.get('content','')) == content:
+                              return
+                          payload['sha'] = remote['sha']
+                      except urllib.error.HTTPError as error:
+                          if error.code != 404:
+                              raise
+                      request = urllib.request.Request(url,data=json.dumps(payload).encode(),headers={**headers,'Content-Type':'application/json'},method='PUT')
+                      with fetch(request,timeout=10) as response:
+                          if response.status not in (200,201):
+                              raise RuntimeError('report_write_failed')
+                      return
+                  except urllib.error.HTTPError as error:
+                      if error.code not in retryable or attempt == 2:
+                          raise RuntimeError('report_publish_http_'+str(error.code)) from None
+                  except (urllib.error.URLError, TimeoutError):
+                      if attempt == 2:
+                          raise RuntimeError('report_publish_network_failed') from None
+                  wait(2 ** (attempt+1))
+          publish_report(url, headers, content, urllib.request.urlopen, time.sleep)
           PY
+      - name: Retain sanitized browser report even if publication fails
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kofum-browser-report-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            analysis/browser-routing-report.json
+            analysis/browser-routing-stage.txt
+          if-no-files-found: warn
+          retention-days: 14
