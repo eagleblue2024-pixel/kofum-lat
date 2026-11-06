@@ -43,7 +43,7 @@
   "observed_routing_lists": {},
   "navigation_candidates": [
     {
-      "host": "playnixes.com",
+      "host": "hglamioz.com",
       "kind": "main_frame_navigation",
       "original_path_preserved": true,
       "media_suffix": "none"
@@ -91,7 +91,7 @@
   "additional_scope": "Contact only the exact observed same-path HTTPS destination on the explicit five-host allowlist and same-run dmca list. Parse its HTML and packed data without executing destination scripts. Resolve only bounded literal strings, concatenations and uniquely initialized visible identifiers before use. Select one unambiguous static JW HLS source and pass it to existing pinned-HTTPS playlist verification. Playlist hosts come from that configuration and playlist variants; public DNS and TLS checks remain. No redirects, linked destination scripts, keys, segments or video requested. Signed URLs stay private.",
   "destination_validation": {
     "status": "unsupported_or_failed",
-    "host": "playnixes.com",
+    "host": "hglamioz.com",
     "approved_hosts": [
       "hglamioz.com",
       "hgplaycdn.com",
@@ -100,9 +100,9 @@
       "playnixes.com"
     ],
     "note": "Exact browser-observed URL only; no identifier migration, remote script execution at destination, segment requests or playback test.",
-    "html_characters": 15848,
+    "html_characters": 15851,
     "iframe_count": 0,
-    "code": "jw_logical_or_left_logicalexpression_cause_logical_or_left_memberexpression_object_identifier_writes_one_init_objectexpression_order_before_scope_visible_kind_var_mutations_not_observed_escape_not_observed_key_named_field_literal_cause_nonliteral_source_memberexpression"
+    "code": "jw_source_url_rejected"
   },
   "routing_assignment_capture": {
     "status": "complete",
@@ -146,7 +146,7 @@
       "node_version": "v20.20.1"
     },
     "destination_memberships": {
-      "playnixes.com": [
+      "hglamioz.com": [
         "dmca"
       ]
     }
@@ -154,7 +154,7 @@
   "routing_capture_scope": "AST-based value observation at named main/dmca/rules initializers and assignments, including local scopes. Original values returned unchanged. No source publication.",
   "destination_structure": {
     "status": "static_structure_complete",
-    "html_sha256": "1f0792dd9fb1d4ac09bcd0acff52359695edf5d78848edafd9f915d2341a6f6c",
+    "html_sha256": "2b5090cbcb1b5be53e4c7c04c4864558ef8c0b4f1e0f8b6e768e943d0632a6a3",
     "tags": {
       "script": 16,
       "iframe": 0,
@@ -171,7 +171,7 @@
         "type": "javascript_or_unspecified",
         "integrity_present": false,
         "characters": 0,
-        "host": "playnixes.com",
+        "host": "hglamioz.com",
         "signals": {
           "jwplayer": false,
           "playerjs": false,
@@ -205,7 +205,7 @@
         "type": "javascript_or_unspecified",
         "integrity_present": false,
         "characters": 0,
-        "host": "playnixes.com",
+        "host": "hglamioz.com",
         "signals": {
           "jwplayer": false,
           "playerjs": false,
@@ -239,7 +239,7 @@
         "type": "javascript_or_unspecified",
         "integrity_present": false,
         "characters": 0,
-        "host": "playnixes.com",
+        "host": "hglamioz.com",
         "signals": {
           "jwplayer": false,
           "playerjs": false,
@@ -477,7 +477,7 @@
         "type": "javascript_or_unspecified",
         "integrity_present": false,
         "characters": 0,
-        "host": "playnixes.com",
+        "host": "hglamioz.com",
         "signals": {
           "jwplayer": false,
           "playerjs": false,
@@ -545,7 +545,7 @@
         "type": "javascript_or_unspecified",
         "integrity_present": false,
         "characters": 0,
-        "host": "playnixes.com",
+        "host": "hglamioz.com",
         "signals": {
           "jwplayer": false,
           "playerjs": false,
@@ -578,7 +578,7 @@
         "external": false,
         "type": "javascript_or_unspecified",
         "integrity_present": false,
-        "characters": 9308,
+        "characters": 9311,
         "signals": {
           "jwplayer": false,
           "playerjs": false,
@@ -605,7 +605,7 @@
           "cloudflare_challenge_marker": false,
           "file_missing_marker": false
         },
-        "inline_sha256": "7a53d8cfd502919abb8d2dfb33444f44fc4b220baf15d5215d8e4c3d919b6817",
+        "inline_sha256": "b4e4fafbfcfa70046a522842410748dbecc4f1c324dd2ba3b8ea0e78d18f4a2e",
         "packed_inspection": {
           "status": "packed_inspection_complete",
           "candidates": [
@@ -613,9 +613,9 @@
               "status": "decoded_candidate",
               "parameter_count": 6,
               "radix": 36,
-              "word_count": 494,
-              "characters": 10714,
-              "sha256": "cb0756900be8b26683630f39faf2ee137229a19c50b7e20d09d78246d44ecf73",
+              "word_count": 495,
+              "characters": 10715,
+              "sha256": "28f29049f65306ca5102f4f30180c7b380345427508ed46335c4e63443c74a87",
               "signals": {
                 "jwplayer": true,
                 "playerjs": false,
@@ -655,7 +655,7 @@
         "type": "javascript_or_unspecified",
         "integrity_present": false,
         "characters": 0,
-        "host": "playnixes.com",
+        "host": "hglamioz.com",
         "signals": {
           "jwplayer": false,
           "playerjs": false,
@@ -784,8 +784,8 @@
   },
   "jw_extractor_self_test": {
     "status": "passed",
-    "passed": 57,
-    "total": 57
+    "passed": 68,
+    "total": 68
   },
   "diagnostic_approved_hosts": [
     "hglamioz.com",
@@ -806,6 +806,6 @@
     "download": "success",
     "capture": "success"
   },
-  "workflow_run_id": "42232570345",
-  "workflow_head_sha": "35f54e1760f61f90bbfff2d31e6a5b52e6f941c9"
+  "workflow_run_id": "42237026098",
+  "workflow_head_sha": "b7e6c230502da3b7558f70d6584c62558669ebe3"
 }
