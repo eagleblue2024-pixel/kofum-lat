@@ -7,6 +7,8 @@ on:
       - tools/browser_routing.py
       - tools/sandbox_launcher.py
       - tools/follow_hglamioz.py
+      - tools/capture_routing_lists.py
+      - tools/instrument_routing.cjs
   workflow_dispatch:
 permissions:
   contents: write
@@ -21,22 +23,28 @@ jobs:
       - uses: actions/checkout@v6
         with:
           persist-credentials: false
-      - name: Check policies and initialize sanitized status
+      - name: Initialize sanitized status then check Python policies
         run: |
-          python3 tools/browser_routing.py --self-test
-          python3 tools/sandbox_launcher.py --self-test
-          python3 tools/follow_hglamioz.py --self-test
           mkdir -p analysis "$RUNNER_TEMP/kofum-home"
           echo "PLAYWRIGHT_BROWSERS_PATH=$RUNNER_TEMP/kofum-browsers" >> "$GITHUB_ENV"
           printf '%s\n' '{"status":"dependency_setup_not_completed","scope":"No browser or source execution result yet."}' > analysis/browser-routing-report.json
+          python3 tools/browser_routing.py --self-test
+          python3 tools/sandbox_launcher.py --self-test
+          python3 tools/follow_hglamioz.py --self-test
+          python3 tools/capture_routing_lists.py --self-test
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '20.20.1'
+      - name: Check bundled AST parser using synthetic fixtures only
+        run: node --expose-internals tools/instrument_routing.cjs --self-test
       - name: Install pinned Playwright and Chromium dependencies on ephemeral runner
         run: |
           python3 -m venv "$RUNNER_TEMP/kofum-venv"
           "$RUNNER_TEMP/kofum-venv/bin/python" -m pip install --disable-pip-version-check --no-cache-dir playwright==1.64.1
           "$RUNNER_TEMP/kofum-venv/bin/python" -m playwright install --with-deps --only-shell chromium
-      - name: Observe approved navigation then validate destination playlists without video segments
+      - name: Capture routing assignments without expanding destination authorization
         run: |
-          env -i PATH="$PATH" HOME="$RUNNER_TEMP/kofum-home" TMPDIR="$RUNNER_TEMP" PLAYWRIGHT_BROWSERS_PATH="$PLAYWRIGHT_BROWSERS_PATH" "$RUNNER_TEMP/kofum-venv/bin/python" tools/follow_hglamioz.py
+          env -i PATH="$PATH" HOME="$RUNNER_TEMP/kofum-home" TMPDIR="$RUNNER_TEMP" PLAYWRIGHT_BROWSERS_PATH="$PLAYWRIGHT_BROWSERS_PATH" "$RUNNER_TEMP/kofum-venv/bin/python" tools/capture_routing_lists.py
       - name: Publish sanitized browser report only
         if: always()
         env:
