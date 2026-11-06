@@ -1,4 +1,4 @@
-"""Follow only the exact approved, same-path navigation after the sandboxed browser closes."""
+"""Follow only an observed, explicitly approved same-path destination."""
 import asyncio
 import json
 import re
@@ -7,7 +7,7 @@ from pathlib import Path
 from urllib.parse import urljoin, urlsplit
 
 ORIGINS={'streamwish.com','streamwish.to','niramirus.com','medixiru.com','hanerix.com','hglink.to','hgcloud.to'}
-TARGET='hglamioz.com'
+TARGETS=frozenset({'hglamioz.com','medixiru.com'})
 STRING=r"""(?:"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')"""
 PACK=re.compile(r'\}\s*\(\s*('+STRING+r')\s*,\s*(\d{1,2})\s*,\s*(\d{1,5})\s*,\s*('+STRING+r')\s*\.split\(\s*([\'"])\|\5\s*\)')
 class ProbeError(Exception):pass
@@ -29,7 +29,8 @@ def remember(url,main_navigation,page,state):
     if state.get('embed') is None and p.hostname in ORIGINS:
         state['embed']=url;state['page']=page
     elif state.get('embed') and page is state.get('page') and not state.get('destination'):
-        if p.hostname==TARGET and p.path==urlsplit(state['embed']).path:state['destination']=url
+        original=urlsplit(state['embed'])
+        if p.hostname in TARGETS and p.hostname!=original.hostname and p.path==original.path:state['destination']=url
 
 def decode_string(token):
     def replace(m):
@@ -104,15 +105,17 @@ def verify_playlist(url,referer,fetch,events,depth=0):
     return {'kind':'media','entry_count':entries,'segments_requested':False}
 
 def validate_destination(url,embed,events,fetch=None):
-    report={'status':'not_completed','host':TARGET,'note':'Exact browser-observed URL only; no identifier migration, remote script execution at destination, segment requests or playback test.'}
+    report={'status':'not_completed','host':None,'approved_hosts':sorted(TARGETS),'note':'Exact browser-observed URL only; no identifier migration, remote script execution at destination, segment requests or playback test.'}
     errors=(ProbeError,)
     if fetch is None:
         import analyze_mainjs as base
         fetch=base.fetch_text;errors=(ProbeError,base.AnalysisError)
     try:
-        p=safe_https(url,{TARGET});original=safe_https(embed,ORIGINS)
+        p=safe_https(url,TARGETS);original=safe_https(embed,ORIGINS)
         if p.path!=original.path:raise ProbeError('destination_path_changed')
-        html=fetch(url,{TARGET},embed,'destination',events)
+        if p.hostname==original.hostname:raise ProbeError('destination_not_new')
+        report['host']=p.hostname
+        html=fetch(url,{p.hostname},embed,'destination',events)
         report['html_characters']=len(html)
         report['iframe_count']=len(re.findall(r'<iframe\b',html,re.I))
         hls,stats=source_url(html);report['extraction']=stats
@@ -147,11 +150,11 @@ async def run():
         report['destination_probe_error']='browser_observation_failed'
     finally:
         if restore:restore()
-    report['additional_scope']='After closing Chromium, fetch only the exact observed hglamioz.com HTTPS destination if its path matches the original embed. Parse explicit HLS or bounded standard packed data without executing destination scripts. Inspect playlists only; no segments. Signed URLs stay in memory and are not published.'
+    report['additional_scope']='After closing Chromium, fetch only the exact observed HTTPS destination on hglamioz.com or medixiru.com if its path matches the original embed and its host differs. Never replace a host or identifier. Parse explicit HLS or bounded standard packed data without executing destination scripts. Inspect playlists only; no segments. Signed URLs stay in memory and are not published.'
     if private['destination']:
         report['destination_validation']=await asyncio.to_thread(validate_destination,private['destination'],private['embed'],report.setdefault('events',[]))
         if report['destination_validation']['status']=='hls_playlists_accessible_playback_unverified':report['status']='hls_playlists_accessible_playback_unverified'
-    else:report['destination_validation']={'status':'not_attempted','code':'approved_destination_not_observed'}
+    else:report['destination_validation']={'status':'not_attempted','code':'approved_destination_not_observed','approved_hosts':sorted(TARGETS)}
     private.clear();return report
 
 def self_test():
@@ -188,7 +191,16 @@ def self_test():
     try:unpack_one(bomb)
     except ProbeError:passed+=1
     else:raise AssertionError('unbounded packed expansion accepted')
-    return{'passed':passed,'total':14,'scope':'Synthetic navigation, packed-data and playlist tests. No actual destination access or playback verified.'}
+    target='https://medixiru.com/e/movie-id?token=changed'
+    s={'embed':embed,'page':page,'destination':None};remember(target,True,page,s);check(s['destination'],target)
+    report=validate_destination(s['destination'],embed,[],fetch)
+    check(report['status'],'hls_playlists_accessible_playback_unverified');check(report['host'],'medixiru.com')
+    check(calls[-3],target)
+    for candidate in ('https://medixiru.com/e/other-id','https://medixiru.com.evil.net/e/movie-id'):
+        s={'embed':embed,'page':page,'destination':None};remember(candidate,True,page,s);check(s['destination'],None)
+    calls.clear();report=validate_destination('https://other-host.net/e/movie-id',embed,[],fetch);check(calls,[])
+    check(report['code'],'url_not_allowed')
+    return{'passed':passed,'total':22,'scope':'Synthetic tests for both approved hosts, unchanged observed URLs, rejection of other hosts and paths, packed-data bounds and playlists. No actual destination access or playback verified.'}
 
 if __name__=='__main__':
     if '--self-test' in sys.argv:print(json.dumps(self_test()))
