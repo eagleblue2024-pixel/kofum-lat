@@ -1,4 +1,4 @@
-"""Capture named routing assignments without expanding the destination allowlist."""
+"""Capture routing lists and inspect only an approved same-run destination without executing its scripts."""
 import asyncio
 import hashlib
 import json
@@ -27,7 +27,7 @@ class Recorder:
     def summary(self):
         lists={key:value for key,value in self.values.items() if key not in self.ambiguous}
         return {'status':'complete' if len(lists)==3 else 'partial_or_missing','lists':lists,'ambiguous_keys':sorted(self.ambiguous),'value_kinds':self.notes,'binding_calls':self.calls,
-                'note':'Observed source data, not authorization to contact these hosts or evidence of playback.'}
+                'note':'Observed source data; destination contact additionally requires the explicit diagnostic allowlist and same-run membership. Not evidence of playback.'}
 
 def transform(body):
     parser=Path(__file__).with_name('instrument_routing.cjs')
@@ -41,10 +41,15 @@ async def run():
     import analyze_mainjs as base
     from playwright.async_api import BrowserContext
     import follow_hglamioz as previous
-    recorder=Recorder();metadata={'status':'main_script_not_seen'};private={}
-    original_fetch=base.fetch_text;original_page=BrowserContext.new_page
+    from destination_inspection import APPROVED,authorized,inspect
+    recorder=Recorder();metadata={'status':'main_script_not_seen'};private={};diagnostic={'status':'destination_not_fetched'}
+    original_fetch=base.fetch_text;original_page=BrowserContext.new_page;original_targets=previous.TARGETS
     def fetch(url,hosts,referer,stage,events):
+        if stage=='destination':
+            destination=base.checked_url(url,APPROVED)
+            if not authorized(destination.hostname,recorder.summary()):raise base.AnalysisError('destination_not_in_observed_lists')
         body=original_fetch(url,hosts,referer,stage,events)
+        if stage=='destination':diagnostic.update(inspect(body,url))
         if stage=='server':
             private['main']=base.main_script(body,url)
             private['integrity']=any(entry['attrs'].get('integrity') and 'main.js' in entry['attrs'].get('src','') for entry in base.scripts_in(body))
@@ -61,13 +66,16 @@ async def run():
         page=await original_page(context,*args,**kwargs)
         await page.expose_function('__kofumReportRouteList',recorder.record)
         return page
-    base.fetch_text=fetch;BrowserContext.new_page=new_page
+    base.fetch_text=fetch;BrowserContext.new_page=new_page;previous.TARGETS=APPROVED
     try:report=await previous.run()
-    finally:base.fetch_text=original_fetch;BrowserContext.new_page=original_page
+    finally:base.fetch_text=original_fetch;BrowserContext.new_page=original_page;previous.TARGETS=original_targets
     report['routing_assignment_capture']=recorder.summary()
     report['routing_assignment_capture']['instrumentation']=metadata
     report['routing_assignment_capture']['destination_memberships']={item['host']:[key for key,values in report['routing_assignment_capture']['lists'].items() if item['host'] in values] for item in report.get('navigation_candidates',[]) if isinstance(item,dict) and isinstance(item.get('host'),str)}
-    report['routing_capture_scope']='AST-based value observation at named main/dmca/rules initializers and assignments, including local scopes. Original values returned unchanged. No additional host authorization or source publication.'
+    report['routing_capture_scope']='AST-based value observation at named main/dmca/rules initializers and assignments, including local scopes. Original values returned unchanged. No source publication.'
+    report['destination_structure']=diagnostic
+    report['additional_scope']='After Chromium closes, contact only its exact observed same-path HTTPS destination if it is both on the five-host explicit diagnostic allowlist and in the unambiguous dmca list captured in this run. Inspect the returned HTML as data only. Existing HLS playlist checks remain; no destination scripts, linked resources, segments or video are requested by the added diagnostic. No host substitution.'
+    report['diagnostic_approved_hosts']=sorted(APPROVED)
     if 'original_sha256' in metadata:
         if metadata['status']=='instrumented' and 'main_script_sha256' in report:report['instrumented_main_before_tail_sha256']=report['main_script_sha256']
         report['main_script_sha256']=metadata['original_sha256'];report['main_script_characters']=metadata['original_characters']
@@ -80,7 +88,9 @@ def self_test():
     assert 'main' not in recorder.summary()['lists']
     recorder.record('rules',['https://private.net/?token=secret'],'domains');assert 'rules' not in recorder.summary()['lists']
     assert 'secret' not in json.dumps(recorder.summary())
-    return {'passed':5,'total':5,'scope':'Synthetic recorder and redaction tests; no browser or remote source executed.'}
+    from destination_inspection import self_test as inspect_test
+    extra=inspect_test()
+    return {'passed':5+extra['passed'],'total':5+extra['total'],'scope':'Synthetic recorder, static structure, same-run membership and redaction tests; no browser or remote source executed.'}
 
 if __name__=='__main__':
     if '--self-test' in sys.argv:print(json.dumps(self_test()))
