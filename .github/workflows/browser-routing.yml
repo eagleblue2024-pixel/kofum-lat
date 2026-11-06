@@ -55,11 +55,19 @@ jobs:
           start = source.index('function hls(value){')
           end = source.index('\nfunction extract(source){', start)
           old = source[start:end]
-          old_count = old.count("fail('jw_source_url_rejected')")
-          if old_count != 3:
+          if old.count("fail('jw_source_url_rejected')") != 3:
               raise RuntimeError('unexpected_url_validator_shape')
-          new = r"function hls(value){if(value.length>16000)fail('jw_url_length_rejected');if(/[^\x21-\x7e]/.test(value))fail('jw_url_characters_rejected');let p;try{p=new URL(value);}catch(_){fail('jw_url_absolute_parse_rejected');}if(p.protocol!=='https:')fail('jw_url_protocol_rejected');if(p.username||p.password)fail('jw_url_credentials_rejected');if(p.hash)fail('jw_url_fragment_rejected');if(p.port&&p.port!=='443')fail('jw_url_port_rejected');return p.pathname.toLowerCase().endsWith('.m3u8');}"
-          p.write_text(source[:start] + new + source[end:])
+          new = r"function hls(value){if(value==='')return false;if(value.length>16000)fail('jw_url_length_rejected');if(/[^\x21-\x7e]/.test(value))fail('jw_url_characters_rejected');let p;try{p=new URL(value);}catch(_){fail('jw_url_absolute_parse_rejected');}if(p.protocol!=='https:')fail('jw_url_protocol_rejected');if(p.username||p.password)fail('jw_url_credentials_rejected');if(p.hash)fail('jw_url_fragment_rejected');if(p.port&&p.port!=='443')fail('jw_url_port_rejected');return p.pathname.toLowerCase().endsWith('.m3u8');}"
+          source = source[:start] + new + source[end:]
+          marker = ' let passed=0;for(const source of positives)'
+          if source.count(marker) != 1:
+              raise RuntimeError('unexpected_source_test_shape')
+          extra = r''' const mixed=values=>'jwplayer("v").setup({sources:['+values.map(value=>'{file:'+JSON.stringify(value)+'}').join(',')+']});';
+           positives.push(mixed(['',url]),mixed([url,'']));
+           negatives.push(mixed(['']),mixed(['//cdn.fixture.net/master.m3u8',url]),mixed(['http://cdn.fixture.net/master.m3u8',url]),mixed(['',url,'https://cdn.fixture.net/other.m3u8']));
+          '''
+          source = source.replace(marker,extra+marker)
+          p.write_text(source)
           PY
           node --expose-internals tools/extract_jw_hls.cjs --self-test
       - name: Install pinned Python Playwright package
