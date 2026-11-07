@@ -1,6 +1,6 @@
 {
   "status": "unsupported",
-  "scope": "Selected source AST operations use unchanged data/step/time limits. Isolated modeled-function prototype data and bounded default coercions are supported; custom conversion hooks and native/host coercions stay blocked. No eval or Function, browser, destination requests or playback.",
+  "scope": "Selected source AST operations use unchanged data/step/time limits. Isolated modeled-function prototype data and bounded default coercions are supported; custom conversion hooks and native/host coercions stay blocked. No eval or Function, browser, destination requests or playback. Ordinary modeled-function construction uses isolated this, bounded private data-prototype lookup and interpreter-only invocation. Inherited conversion hooks stay blocked; no additional native constructor is enabled.",
   "base_self_test": {
     "passed": 47,
     "total": 47
@@ -22,47 +22,31 @@
     "total": 19
   },
   "self_test": {
-    "passed": 89,
-    "total": 89,
+    "passed": 114,
+    "total": 114,
     "base_cases": 47,
     "diagnostic_cases": 5,
     "prototype_cases": 11,
     "coercion_cases": 19,
-    "constructor_cases": 7
+    "constructor_cases": 32
   },
   "prototype_policy": "normal_modeled_function_read_only_inert_object",
   "coercion_policy": "bounded_plain_object_tag_array_join_source_function_text_no_hooks",
   "interpreter_provenance": {
     "repository_sha256": "90df7274a5d9b12b11eb6df94eef40487d1e963d295f90ffd07b6c569853f031",
-    "effective_sha256": "1d402e8b210a2241d75d64b2294e71c199942c3a55de646d86e8ae505cf7ecde",
+    "effective_sha256": "6863997b0a725b6e5a0d751c5cbb462b4ebdeaedd0a92bfb6a0dda81868b4ff5",
     "instrumentation": "inert_prototype_bounded_default_coercion_and_rejection_enums",
-    "constructor_context": "enum_only_before_invoke"
+    "constructor_model": "ordinary_fn_data_instances_private_parent_map"
   },
   "main_script_sha256": "15b9ce8846e132e81a1f3bcad60f26e26ed8752dd2dc93f78b1b64284a1ef796",
-  "code": "ast_new_unsupported",
+  "code": "ast_missing_regexp_intrinsic",
   "failure_phase": "rotation",
-  "constructor_context_test": {
-    "passed": 7,
-    "total": 7
+  "modeled_constructor_test": {
+    "passed": 32,
+    "total": 32
   },
-  "constructor_diagnostics": "enum_only_rejection_before_invoke",
-  "constructor_rejection": {
-    "constructor_kind": "modeled_function",
-    "native_name": "not_applicable",
-    "callee_kind": "Identifier",
-    "argument_count": 1,
-    "argument_kinds": [
-      "modeled_function"
-    ],
-    "arguments_truncated": false,
-    "function_signature": {
-      "node_type": "FunctionExpression",
-      "parameter_count": 1,
-      "async": false,
-      "generator": false
-    },
-    "phase": "rotation"
-  },
-  "workflow_run_id": "42389787231",
-  "workflow_head_sha": "775b6be6063af66665bdcf4cc1650bd9585d244e"
+  "constructor_policy": "ordinary_modeled_functions_isolated_this_private_data_parent_map",
+  "constructor_diagnostics": "enum_only_for_remaining_rejections",
+  "workflow_run_id": "42391199215",
+  "workflow_head_sha": "57eb785419d254067704979685ef9c17cf09a22d"
 }
