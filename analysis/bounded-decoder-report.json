@@ -1,0 +1,12 @@
+{
+  "status": "unsupported",
+  "scope": "Selected source AST operations are modeled under explicit data/step/time limits. No eval or Function, no browser, no destination requests or playback. This differs from structural inspection alone.",
+  "self_test": {
+    "passed": 47,
+    "total": 47
+  },
+  "main_script_sha256": "15b9ce8846e132e81a1f3bcad60f26e26ed8752dd2dc93f78b1b64284a1ef796",
+  "code": "ast_property_forbidden",
+  "workflow_run_id": "42385604375",
+  "workflow_head_sha": "fe2b2bae9059c6990187fcc6b727067637202481"
+}
