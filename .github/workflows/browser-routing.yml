@@ -49,25 +49,33 @@ jobs:
           printf '%s\n' ast_checks > analysis/browser-routing-stage.txt
           node --expose-internals tools/instrument_routing.cjs --self-test
           python3 - <<'PY'
+          import hashlib, json
           from pathlib import Path
           p = Path('tools/extract_jw_hls.cjs')
+          repository_sha256 = hashlib.sha256(p.read_bytes()).hexdigest()
           source = p.read_text()
           start = source.index('function hls(value){')
           end = source.index('\nfunction extract(source){', start)
           old = source[start:end]
           if old.count("fail('jw_source_url_rejected')") != 3:
               raise RuntimeError('unexpected_url_validator_shape')
-          new = r"function hls(value){if(value==='')return false;if(value.length>16000)fail('jw_url_length_rejected');if(/[^\x21-\x7e]/.test(value))fail('jw_url_characters_rejected');let p;try{p=new URL(value);}catch(_){fail('jw_url_absolute_parse_rejected');}if(p.protocol!=='https:')fail('jw_url_protocol_rejected');if(p.username||p.password)fail('jw_url_credentials_rejected');if(p.hash)fail('jw_url_fragment_rejected');if(p.port&&p.port!=='443')fail('jw_url_port_rejected');return p.pathname.toLowerCase().endsWith('.m3u8');}"
+          new = r"function hls(value){if(value==='')return false;if(value.length>16000)fail('jw_url_length_rejected');if(/[^\x21-\x7e]/.test(value))fail('jw_url_characters_rejected');let p;try{p=new URL(value);}catch(_){if(value.startsWith('//'))fail('jw_url_network_relative_rejected');if(value.startsWith('/'))fail('jw_url_root_relative_rejected');if(value.startsWith('?'))fail('jw_url_query_relative_rejected');if(value.startsWith('#'))fail('jw_url_fragment_relative_rejected');if(/^[a-z][a-z0-9+.-]*:/i.test(value))fail('jw_url_absolute_malformed_rejected');fail('jw_url_path_relative_rejected');}if(p.protocol!=='https:')fail('jw_url_protocol_rejected');if(p.username||p.password)fail('jw_url_credentials_rejected');if(p.hash)fail('jw_url_fragment_rejected');if(p.port&&p.port!=='443')fail('jw_url_port_rejected');return p.pathname.toLowerCase().endsWith('.m3u8');}"
           source = source[:start] + new + source[end:]
           marker = ' let passed=0;for(const source of positives)'
-          if source.count(marker) != 1:
+          total_marker = 'total:positives.length+negatives.length'
+          if source.count(marker) != 1 or source.count(total_marker) != 1:
               raise RuntimeError('unexpected_source_test_shape')
           extra = r''' const mixed=values=>'jwplayer("v").setup({sources:['+values.map(value=>'{file:'+JSON.stringify(value)+'}').join(',')+']});';
            positives.push(mixed(['',url]),mixed([url,'']));
            negatives.push(mixed(['']),mixed(['//cdn.fixture.net/master.m3u8',url]),mixed(['http://cdn.fixture.net/master.m3u8',url]),mixed(['',url,'https://cdn.fixture.net/other.m3u8']));
+           const diagnosticCases=[['//cdn.fixture.net/master.m3u8','jw_url_network_relative_rejected'],['/master.m3u8','jw_url_root_relative_rejected'],['master.m3u8','jw_url_path_relative_rejected'],['?token=private','jw_url_query_relative_rejected'],['#private','jw_url_fragment_relative_rejected'],['https://','jw_url_absolute_malformed_rejected'],['https://[invalid]/master.m3u8','jw_url_absolute_malformed_rejected']];
+           let diagnosticPassed=0;for(const [value,expected] of diagnosticCases){let actual='';try{hls(value);}catch(error){actual=error.message;}if(actual!==expected)fail('fixture_failed');diagnosticPassed++;}
           '''
-          source = source.replace(marker,extra+marker)
+          source = source.replace(marker,extra+' let passed=diagnosticPassed;for(const source of positives)')
+          source = source.replace(total_marker,total_marker+'+diagnosticPassed')
           p.write_text(source)
+          provenance = {'repository_sha256':repository_sha256,'effective_sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'runtime_transform':'url_shape_diagnostics_and_synthetic_fixtures'}
+          Path('analysis/jw-extractor-provenance.json').write_text(json.dumps(provenance)+'\n')
           PY
           node --expose-internals tools/extract_jw_hls.cjs --self-test
       - name: Install pinned Python Playwright package
@@ -118,6 +126,13 @@ jobs:
           report = Path('analysis/browser-routing-report.json')
           data = json.loads(report.read_text(encoding='utf-8')) if report.exists() else {'status':'workflow_did_not_produce_report'}
           data['workflow_preceding_status'] = os.environ['PRIOR_STATUS']
+          provenance_file = Path('analysis/jw-extractor-provenance.json')
+          if provenance_file.exists():
+              provenance = json.loads(provenance_file.read_text())
+              clean = {key:provenance[key] for key in ('repository_sha256','effective_sha256') if isinstance(provenance.get(key),str) and re.fullmatch(r'[0-9a-f]{64}',provenance[key])}
+              if len(clean)==2 and provenance.get('runtime_transform')=='url_shape_diagnostics_and_synthetic_fixtures':
+                  clean['runtime_transform']='url_shape_diagnostics_and_synthetic_fixtures'
+                  data['jw_extractor_provenance']=clean
           stage_file = Path('analysis/browser-routing-stage.txt')
           stage = stage_file.read_text(encoding='utf-8').strip() if stage_file.exists() else 'initialization_not_completed'
           stages = {'initialization_not_completed','python_policy_checks','node_setup','ast_checks','python_package_installation','system_dependencies','chromium_download','browser_capture','capture_process_completed'}
