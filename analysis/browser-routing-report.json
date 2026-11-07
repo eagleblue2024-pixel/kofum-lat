@@ -1,6 +1,6 @@
 {
   "requested_slug": "the-mongoose",
-  "status": "navigation_candidate_observed",
+  "status": "hls_playlists_accessible_playback_unverified",
   "phase": "completed",
   "playwright_version": "1.64.1",
   "events": [
@@ -23,6 +23,14 @@
     {
       "stage": "destination",
       "http_status": 200
+    },
+    {
+      "stage": "destination_hls",
+      "http_status": 200
+    },
+    {
+      "stage": "destination_hls",
+      "http_status": 200
     }
   ],
   "scope": "Instrumented isolated Chromium, temporary context, no personal cookies. Only the initial document and same-origin scripts are served through pinned HTTPS. New navigations and media are intercepted and aborted. Minimal response headers may differ from a normal browser. No video, raw source, complete URLs, paths, query parameters or trace files are published. This is not a playback test.",
@@ -43,7 +51,7 @@
   "observed_routing_lists": {},
   "navigation_candidates": [
     {
-      "host": "playnixes.com",
+      "host": "hglamioz.com",
       "kind": "main_frame_navigation",
       "original_path_preserved": true,
       "media_suffix": "none"
@@ -52,14 +60,14 @@
   "media_candidates": [],
   "blocked_resources": [
     {
-      "host": "streamwish.to",
-      "kind": "stylesheet",
+      "host": "static.cloudflareinsights.com",
+      "kind": "script",
       "original_path_preserved": false,
       "media_suffix": "none"
     },
     {
-      "host": "static.cloudflareinsights.com",
-      "kind": "script",
+      "host": "streamwish.to",
+      "kind": "stylesheet",
       "original_path_preserved": false,
       "media_suffix": "none"
     }
@@ -88,10 +96,10 @@
       "status": "started"
     }
   ],
-  "additional_scope": "Contact only the exact observed same-path HTTPS destination on the explicit five-host allowlist and same-run dmca list. Parse its HTML and packed data without executing destination scripts. Resolve only bounded literal strings, concatenations and uniquely initialized visible identifiers before use. Select one unambiguous static JW HLS source and pass it to existing pinned-HTTPS playlist verification. Playlist hosts come from that configuration and playlist variants; public DNS and TLS checks remain. No redirects, linked destination scripts, keys, segments or video requested. Signed URLs stay private.",
+  "additional_scope": "Contact only the exact observed same-path HTTPS destination on the explicit five-host allowlist and same-run dmca list. Parse its HTML and packed data without executing destination scripts. Resolve only bounded literal strings, concatenations and uniquely initialized visible identifiers before use. Root-relative sources must resolve to .m3u8 on the same observed HTTPS origin; other relative forms are rejected. Select one unambiguous static JW HLS source and pass it to existing pinned-HTTPS playlist verification. Playlist hosts come from that configuration and playlist variants; public DNS and TLS checks remain. No redirects, linked destination scripts, keys, segments or video requested. Signed URLs stay private.",
   "destination_validation": {
-    "status": "unsupported_or_failed",
-    "host": "playnixes.com",
+    "status": "hls_playlists_accessible_playback_unverified",
+    "host": "hglamioz.com",
     "approved_hosts": [
       "hglamioz.com",
       "hgplaycdn.com",
@@ -100,9 +108,25 @@
       "playnixes.com"
     ],
     "note": "Exact browser-observed URL only; no identifier migration, remote script execution at destination, segment requests or playback test.",
-    "html_characters": 15851,
+    "html_characters": 15841,
     "iframe_count": 0,
-    "code": "jw_url_root_relative_rejected"
+    "extraction": {
+      "method": "static_jw_setup_from_packed_ast",
+      "packed_blocks": 1,
+      "root_relative_policy": "hls_on_same_observed_https_origin_only",
+      "note": "Bounded statically resolved strings in JW configuration from a dictionary-decoding candidate. Playlist access is not proof of playback or movie identity. Signed source stays in memory."
+    },
+    "playlist": {
+      "kind": "master",
+      "variant_count": 1,
+      "declared_max_height": 720,
+      "selected_variant": {
+        "kind": "media",
+        "entry_count": 601,
+        "segments_requested": false
+      },
+      "note": "Height declared by the playlist, not measured from decoded video."
+    }
   },
   "routing_assignment_capture": {
     "status": "complete",
@@ -146,7 +170,7 @@
       "node_version": "v20.20.1"
     },
     "destination_memberships": {
-      "playnixes.com": [
+      "hglamioz.com": [
         "dmca"
       ]
     }
@@ -154,7 +178,7 @@
   "routing_capture_scope": "AST-based value observation at named main/dmca/rules initializers and assignments, including local scopes. Original values returned unchanged. No source publication.",
   "destination_structure": {
     "status": "static_structure_complete",
-    "html_sha256": "f3d0edef5f9ac70f7edaa8b49bdd2ad78bb2a955401ac65eb895736b8817eb6f",
+    "html_sha256": "9fb42b49ff3fb4c647f03ee03a7a8066b1bd66f48b26498a877614db24db09bd",
     "tags": {
       "script": 16,
       "iframe": 0,
@@ -171,7 +195,7 @@
         "type": "javascript_or_unspecified",
         "integrity_present": false,
         "characters": 0,
-        "host": "playnixes.com",
+        "host": "hglamioz.com",
         "signals": {
           "jwplayer": false,
           "playerjs": false,
@@ -205,7 +229,7 @@
         "type": "javascript_or_unspecified",
         "integrity_present": false,
         "characters": 0,
-        "host": "playnixes.com",
+        "host": "hglamioz.com",
         "signals": {
           "jwplayer": false,
           "playerjs": false,
@@ -239,7 +263,7 @@
         "type": "javascript_or_unspecified",
         "integrity_present": false,
         "characters": 0,
-        "host": "playnixes.com",
+        "host": "hglamioz.com",
         "signals": {
           "jwplayer": false,
           "playerjs": false,
@@ -477,7 +501,7 @@
         "type": "javascript_or_unspecified",
         "integrity_present": false,
         "characters": 0,
-        "host": "playnixes.com",
+        "host": "hglamioz.com",
         "signals": {
           "jwplayer": false,
           "playerjs": false,
@@ -545,7 +569,7 @@
         "type": "javascript_or_unspecified",
         "integrity_present": false,
         "characters": 0,
-        "host": "playnixes.com",
+        "host": "hglamioz.com",
         "signals": {
           "jwplayer": false,
           "playerjs": false,
@@ -578,7 +602,7 @@
         "external": false,
         "type": "javascript_or_unspecified",
         "integrity_present": false,
-        "characters": 9311,
+        "characters": 9301,
         "signals": {
           "jwplayer": false,
           "playerjs": false,
@@ -605,7 +629,7 @@
           "cloudflare_challenge_marker": false,
           "file_missing_marker": false
         },
-        "inline_sha256": "4dbbb5e6170e61efb11cbb4b89c762ffa9349c6f06cc8f47443f198f8a8ab81a",
+        "inline_sha256": "d7f520c56516100adbcd4fa0d2a302072c8f20f1a73181b186d742c7cdce1be6",
         "packed_inspection": {
           "status": "packed_inspection_complete",
           "candidates": [
@@ -613,9 +637,9 @@
               "status": "decoded_candidate",
               "parameter_count": 6,
               "radix": 36,
-              "word_count": 494,
-              "characters": 10717,
-              "sha256": "8b6f3a7701d4702e1e5ef103d0fb6bc23f4fefdcc15dbce475fc1ccf8596cdd0",
+              "word_count": 492,
+              "characters": 10712,
+              "sha256": "ff71fc84e482368e847c4fa836b6fde63ca42eb6036e55690c4be2a98587be15",
               "signals": {
                 "jwplayer": true,
                 "playerjs": false,
@@ -655,7 +679,7 @@
         "type": "javascript_or_unspecified",
         "integrity_present": false,
         "characters": 0,
-        "host": "playnixes.com",
+        "host": "hglamioz.com",
         "signals": {
           "jwplayer": false,
           "playerjs": false,
@@ -784,8 +808,8 @@
   },
   "jw_extractor_self_test": {
     "status": "passed",
-    "passed": 81,
-    "total": 81
+    "passed": 99,
+    "total": 99
   },
   "diagnostic_approved_hosts": [
     "hglamioz.com",
@@ -798,8 +822,8 @@
   "workflow_preceding_status": "success",
   "jw_extractor_provenance": {
     "repository_sha256": "e9a27abb03507462f20f4bdc5e5b6fa99c73be9f74b446ec0d4eedab9ff39144",
-    "effective_sha256": "657540fddde351db0236f6dab8b4dcfae341e638433857e8a1548811dce2679a",
-    "runtime_transform": "url_shape_diagnostics_and_synthetic_fixtures"
+    "effective_sha256": "c3dd18aaa1c0e28451d266ad4eebce3d8266e9397ebad4fc67351df03efbdf86",
+    "runtime_transform": "same_origin_root_hls_and_url_diagnostics"
   },
   "workflow_stage": "capture_process_completed",
   "workflow_steps": {
@@ -811,6 +835,6 @@
     "download": "success",
     "capture": "success"
   },
-  "workflow_run_id": "42374346854",
-  "workflow_head_sha": "1c9bb72b3e068f28573fcfba17d089e1b4854374"
+  "workflow_run_id": "42375947832",
+  "workflow_head_sha": "14ed2036a9e6b3113ee26a9a1934b972c9b21df1"
 }
