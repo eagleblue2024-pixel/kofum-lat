@@ -1,0 +1,117 @@
+{
+  "status": "static_resolution_incomplete",
+  "scope": "AST-only route candidates and decoder structure. No source execution, destination requests, identifier migration or playback.",
+  "self_test": {
+    "passed": 25,
+    "total": 25
+  },
+  "main_script_sha256": "15b9ce8846e132e81a1f3bcad60f26e26ed8752dd2dc93f78b1b64284a1ef796",
+  "main_script_characters": 71214,
+  "analysis": {
+    "status": "static_resolution_incomplete",
+    "lists": {
+      "main": {
+        "status": "unsupported",
+        "code": "route_call_unresolved"
+      },
+      "dmca": {
+        "status": "unsupported",
+        "code": "route_call_unresolved"
+      },
+      "rules": {
+        "status": "unsupported",
+        "code": "route_binding_unresolved"
+      }
+    },
+    "decoder": {
+      "status": "structure_observed",
+      "declaration_count": 1,
+      "structure": {
+        "parameter_count": 2,
+        "node_types": {
+          "BlockStatement": 19,
+          "ReturnStatement": 10,
+          "Identifier": 176,
+          "IfStatement": 4,
+          "ExpressionStatement": 14,
+          "AssignmentExpression": 38,
+          "SequenceExpression": 9,
+          "MemberExpression": 76,
+          "Literal": 250,
+          "CallExpression": 26,
+          "UnaryExpression": 92,
+          "ArrayExpression": 4,
+          "LogicalExpression": 3,
+          "NewExpression": 2,
+          "BinaryExpression": 180,
+          "FunctionExpression": 9,
+          "ThisExpression": 17,
+          "ForStatement": 6,
+          "UpdateExpression": 9,
+          "VariableDeclaration": 15,
+          "VariableDeclarator": 29,
+          "ConditionalExpression": 4,
+          "ObjectExpression": 1
+        },
+        "operators": {
+          "=": 35,
+          "!": 6,
+          "&&": 2,
+          "===": 3,
+          "-": 86,
+          "+": 96,
+          "*": 61,
+          "<": 5,
+          "~": 2,
+          "^": 1,
+          "%": 7,
+          "&": 2,
+          ">>": 1,
+          "||": 1,
+          "!==": 2
+        },
+        "callee_types": {
+          "MemberExpression": 21,
+          "Identifier": 5
+        },
+        "string_literal_count": 68,
+        "array_literal_count": 4,
+        "nested_function_count": 9
+      },
+      "dependencies": [
+        {
+          "role": "dependency_1",
+          "structure": {
+            "parameter_count": 0,
+            "node_types": {
+              "BlockStatement": 2,
+              "ReturnStatement": 2,
+              "CallExpression": 1,
+              "Identifier": 4,
+              "ExpressionStatement": 1,
+              "AssignmentExpression": 1,
+              "FunctionExpression": 1,
+              "VariableDeclaration": 1,
+              "VariableDeclarator": 1,
+              "ArrayExpression": 1,
+              "Literal": 582
+            },
+            "operators": {
+              "=": 1
+            },
+            "callee_types": {
+              "Identifier": 1
+            },
+            "string_literal_count": 582,
+            "array_literal_count": 1,
+            "nested_function_count": 1
+          }
+        }
+      ]
+    },
+    "parser_version": "8.16.0",
+    "scope": "Static candidates and bounded structural counts only. No source functions invoked, no browser, no destination contact, no authorization or playback claim."
+  },
+  "workflow_run_id": "42377844640",
+  "workflow_head_sha": "2b1ef5aa39f063311bd1fa550259f0b295d171bc"
+}
