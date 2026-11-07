@@ -1,0 +1,133 @@
+{
+  "status": "decoder_relationships_observed",
+  "scope": "AST relationships only; no source functions executed, no destination contact, no keys, indices or source values published. Not a routing resolver or playback test.",
+  "self_test": {
+    "passed": 19,
+    "total": 19
+  },
+  "main_script_sha256": "15b9ce8846e132e81a1f3bcad60f26e26ed8752dd2dc93f78b1b64284a1ef796",
+  "main_script_characters": 71214,
+  "analysis": {
+    "status": "decoder_relationships_observed",
+    "decoder_signals": {
+      "recognized_call_syntax": {
+        "indexOf": 3,
+        "push": 1,
+        "fromCharCode": 2,
+        "charCodeAt": 4,
+        "decodeURIComponent": 1
+      },
+      "unknown_call_count": 15,
+      "loops": {
+        "ForStatement": 6
+      },
+      "push_shift_same_identifier_patterns": 0
+    },
+    "table_candidates": [
+      {
+        "role": "table_candidate_1",
+        "parameter_count": 0,
+        "literal_string_array_count": 1,
+        "literal_string_array_sizes": [
+          582
+        ],
+        "self_replacement_returns_array_identifier_pattern": true
+      }
+    ],
+    "table_argument_iife_candidates": [
+      {
+        "table_candidate_argument_roles": [
+          "table_candidate_1"
+        ],
+        "body_signals": {
+          "recognized_call_syntax": {
+            "push": 2,
+            "shift": 2,
+            "parseInt": 11
+          },
+          "unknown_call_count": 17,
+          "loops": {
+            "WhileStatement": 1
+          },
+          "push_shift_same_identifier_patterns": 2
+        }
+      }
+    ],
+    "routes": {
+      "main": {
+        "binding_write_count": 1,
+        "initializers": [
+          {
+            "type": "ArrayExpression",
+            "element_count": 3,
+            "element_relationships": [
+              {
+                "kind": "other_expression"
+              },
+              {
+                "kind": "other_expression"
+              },
+              {
+                "kind": "other_expression"
+              }
+            ]
+          }
+        ],
+        "method_call_syntax": {}
+      },
+      "dmca": {
+        "binding_write_count": 1,
+        "initializers": [
+          {
+            "type": "ArrayExpression",
+            "element_count": 5,
+            "element_relationships": [
+              {
+                "kind": "other_expression"
+              },
+              {
+                "kind": "other_expression"
+              },
+              {
+                "kind": "other_expression"
+              },
+              {
+                "kind": "other_expression"
+              },
+              {
+                "kind": "other_expression"
+              }
+            ]
+          }
+        ],
+        "method_call_syntax": {}
+      },
+      "rules": {
+        "binding_write_count": 1,
+        "initializers": [
+          {
+            "type": "ArrayExpression",
+            "element_count": 3,
+            "element_relationships": [
+              {
+                "kind": "other_expression"
+              },
+              {
+                "kind": "other_expression"
+              },
+              {
+                "kind": "other_expression"
+              }
+            ]
+          }
+        ],
+        "method_call_syntax": {
+          "unknown": 1
+        }
+      }
+    },
+    "scope": "Syntactic relationships only, not proof of binding identity, execution order, immutability, decryption or runtime routing. No source values, keys, indices, identifiers or URLs published; no source functions invoked."
+  },
+  "workflow_run_id": "42378345135",
+  "workflow_head_sha": "d24ad3f37cbd0537962d4404b23634c1bb60cdf4"
+}
