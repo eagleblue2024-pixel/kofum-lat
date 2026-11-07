@@ -1,6 +1,6 @@
 {
   "status": "unsupported",
-  "scope": "Selected source AST operations are modeled under unchanged data/step/time limits. Rejected-access diagnostics contain fixed enums only. No eval or Function, no browser, no destination requests or playback.",
+  "scope": "Selected source AST operations are modeled under unchanged data/step/time limits. Only normal modeled-function prototype reads yield isolated data objects. Native prototypes, constructor, __proto__ and prototype replacement stay blocked. No eval or Function, no browser, no destination requests or playback.",
   "base_self_test": {
     "passed": 47,
     "total": 47
@@ -13,25 +13,25 @@
     "passed": 5,
     "total": 5
   },
-  "self_test": {
-    "passed": 52,
-    "total": 52,
-    "base_cases": 47,
-    "diagnostic_cases": 5
+  "prototype_model_test": {
+    "passed": 11,
+    "total": 11
   },
+  "self_test": {
+    "passed": 63,
+    "total": 63,
+    "base_cases": 47,
+    "diagnostic_cases": 5,
+    "prototype_cases": 11
+  },
+  "prototype_policy": "normal_modeled_function_read_only_inert_object",
   "interpreter_provenance": {
     "repository_sha256": "90df7274a5d9b12b11eb6df94eef40487d1e963d295f90ffd07b6c569853f031",
-    "effective_sha256": "bdced2896eefd5b4b6b90375e2e5170b1c8ef605d702099f51599e387f892c95",
-    "instrumentation": "rejected_property_enums_only"
+    "effective_sha256": "a4e9f7114ac05bc187c4ea0cfc6ed44c8852c5f97699fc7036eb4b20654a1d71",
+    "instrumentation": "rejected_property_enums_and_inert_fn_prototype"
   },
   "main_script_sha256": "15b9ce8846e132e81a1f3bcad60f26e26ed8752dd2dc93f78b1b64284a1ef796",
-  "code": "ast_property_forbidden",
-  "blocked_access": {
-    "property_class": "prototype",
-    "receiver_kind": "function",
-    "operation": "read",
-    "phase": "rotation"
-  },
-  "workflow_run_id": "42386453548",
-  "workflow_head_sha": "a49a99a6bdcdb227381e90748ea60c940359f00b"
+  "code": "ast_object_coercion_unsupported",
+  "workflow_run_id": "42387326195",
+  "workflow_head_sha": "ec13ff67fcd27aa67a798c76ce644906e363b274"
 }
