@@ -1,12 +1,37 @@
 {
   "status": "unsupported",
-  "scope": "Selected source AST operations are modeled under explicit data/step/time limits. No eval or Function, no browser, no destination requests or playback. This differs from structural inspection alone.",
-  "self_test": {
+  "scope": "Selected source AST operations are modeled under unchanged data/step/time limits. Rejected-access diagnostics contain fixed enums only. No eval or Function, no browser, no destination requests or playback.",
+  "base_self_test": {
     "passed": 47,
     "total": 47
   },
+  "instrumented_regression_test": {
+    "passed": 47,
+    "total": 47
+  },
+  "rejection_diagnostic_test": {
+    "passed": 5,
+    "total": 5
+  },
+  "self_test": {
+    "passed": 52,
+    "total": 52,
+    "base_cases": 47,
+    "diagnostic_cases": 5
+  },
+  "interpreter_provenance": {
+    "repository_sha256": "90df7274a5d9b12b11eb6df94eef40487d1e963d295f90ffd07b6c569853f031",
+    "effective_sha256": "bdced2896eefd5b4b6b90375e2e5170b1c8ef605d702099f51599e387f892c95",
+    "instrumentation": "rejected_property_enums_only"
+  },
   "main_script_sha256": "15b9ce8846e132e81a1f3bcad60f26e26ed8752dd2dc93f78b1b64284a1ef796",
   "code": "ast_property_forbidden",
-  "workflow_run_id": "42385604375",
-  "workflow_head_sha": "fe2b2bae9059c6990187fcc6b727067637202481"
+  "blocked_access": {
+    "property_class": "prototype",
+    "receiver_kind": "function",
+    "operation": "read",
+    "phase": "rotation"
+  },
+  "workflow_run_id": "42386453548",
+  "workflow_head_sha": "a49a99a6bdcdb227381e90748ea60c940359f00b"
 }
