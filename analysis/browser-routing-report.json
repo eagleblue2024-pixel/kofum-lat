@@ -43,7 +43,7 @@
   "observed_routing_lists": {},
   "navigation_candidates": [
     {
-      "host": "niramirus.com",
+      "host": "playnixes.com",
       "kind": "main_frame_navigation",
       "original_path_preserved": true,
       "media_suffix": "none"
@@ -91,7 +91,7 @@
   "additional_scope": "Contact only the exact observed same-path HTTPS destination on the explicit five-host allowlist and same-run dmca list. Parse its HTML and packed data without executing destination scripts. Resolve only bounded literal strings, concatenations and uniquely initialized visible identifiers before use. Select one unambiguous static JW HLS source and pass it to existing pinned-HTTPS playlist verification. Playlist hosts come from that configuration and playlist variants; public DNS and TLS checks remain. No redirects, linked destination scripts, keys, segments or video requested. Signed URLs stay private.",
   "destination_validation": {
     "status": "unsupported_or_failed",
-    "host": "niramirus.com",
+    "host": "playnixes.com",
     "approved_hosts": [
       "hglamioz.com",
       "hgplaycdn.com",
@@ -100,9 +100,9 @@
       "playnixes.com"
     ],
     "note": "Exact browser-observed URL only; no identifier migration, remote script execution at destination, segment requests or playback test.",
-    "html_characters": 15842,
+    "html_characters": 15851,
     "iframe_count": 0,
-    "code": "jw_url_absolute_parse_rejected"
+    "code": "jw_url_root_relative_rejected"
   },
   "routing_assignment_capture": {
     "status": "complete",
@@ -146,7 +146,7 @@
       "node_version": "v20.20.1"
     },
     "destination_memberships": {
-      "niramirus.com": [
+      "playnixes.com": [
         "dmca"
       ]
     }
@@ -154,7 +154,7 @@
   "routing_capture_scope": "AST-based value observation at named main/dmca/rules initializers and assignments, including local scopes. Original values returned unchanged. No source publication.",
   "destination_structure": {
     "status": "static_structure_complete",
-    "html_sha256": "5a86c31f8533327e7fdf679cf37f1ad2a4894ea43203de35067f5729e83e8e9c",
+    "html_sha256": "f3d0edef5f9ac70f7edaa8b49bdd2ad78bb2a955401ac65eb895736b8817eb6f",
     "tags": {
       "script": 16,
       "iframe": 0,
@@ -171,7 +171,7 @@
         "type": "javascript_or_unspecified",
         "integrity_present": false,
         "characters": 0,
-        "host": "niramirus.com",
+        "host": "playnixes.com",
         "signals": {
           "jwplayer": false,
           "playerjs": false,
@@ -205,7 +205,7 @@
         "type": "javascript_or_unspecified",
         "integrity_present": false,
         "characters": 0,
-        "host": "niramirus.com",
+        "host": "playnixes.com",
         "signals": {
           "jwplayer": false,
           "playerjs": false,
@@ -239,7 +239,7 @@
         "type": "javascript_or_unspecified",
         "integrity_present": false,
         "characters": 0,
-        "host": "niramirus.com",
+        "host": "playnixes.com",
         "signals": {
           "jwplayer": false,
           "playerjs": false,
@@ -477,7 +477,7 @@
         "type": "javascript_or_unspecified",
         "integrity_present": false,
         "characters": 0,
-        "host": "niramirus.com",
+        "host": "playnixes.com",
         "signals": {
           "jwplayer": false,
           "playerjs": false,
@@ -545,7 +545,7 @@
         "type": "javascript_or_unspecified",
         "integrity_present": false,
         "characters": 0,
-        "host": "niramirus.com",
+        "host": "playnixes.com",
         "signals": {
           "jwplayer": false,
           "playerjs": false,
@@ -578,7 +578,7 @@
         "external": false,
         "type": "javascript_or_unspecified",
         "integrity_present": false,
-        "characters": 9302,
+        "characters": 9311,
         "signals": {
           "jwplayer": false,
           "playerjs": false,
@@ -605,7 +605,7 @@
           "cloudflare_challenge_marker": false,
           "file_missing_marker": false
         },
-        "inline_sha256": "4cd119a53102e2417b578ce657e0e0bb95e5a2ef6b82c01d1abc8b7fc42b0997",
+        "inline_sha256": "4dbbb5e6170e61efb11cbb4b89c762ffa9349c6f06cc8f47443f198f8a8ab81a",
         "packed_inspection": {
           "status": "packed_inspection_complete",
           "candidates": [
@@ -613,9 +613,9 @@
               "status": "decoded_candidate",
               "parameter_count": 6,
               "radix": 36,
-              "word_count": 493,
-              "characters": 10711,
-              "sha256": "6bade85d030a4176f23ddb4dc0361f804e0f668e4e5cbb974e8b333484e25c9e",
+              "word_count": 494,
+              "characters": 10717,
+              "sha256": "8b6f3a7701d4702e1e5ef103d0fb6bc23f4fefdcc15dbce475fc1ccf8596cdd0",
               "signals": {
                 "jwplayer": true,
                 "playerjs": false,
@@ -655,7 +655,7 @@
         "type": "javascript_or_unspecified",
         "integrity_present": false,
         "characters": 0,
-        "host": "niramirus.com",
+        "host": "playnixes.com",
         "signals": {
           "jwplayer": false,
           "playerjs": false,
@@ -784,8 +784,8 @@
   },
   "jw_extractor_self_test": {
     "status": "passed",
-    "passed": 74,
-    "total": 74
+    "passed": 81,
+    "total": 81
   },
   "diagnostic_approved_hosts": [
     "hglamioz.com",
@@ -796,6 +796,11 @@
   ],
   "instrumented_main_before_tail_sha256": "171be9e32b94f246b89c57b8553f4699ebce341a9334173ad79be65c2bb7a577",
   "workflow_preceding_status": "success",
+  "jw_extractor_provenance": {
+    "repository_sha256": "e9a27abb03507462f20f4bdc5e5b6fa99c73be9f74b446ec0d4eedab9ff39144",
+    "effective_sha256": "657540fddde351db0236f6dab8b4dcfae341e638433857e8a1548811dce2679a",
+    "runtime_transform": "url_shape_diagnostics_and_synthetic_fixtures"
+  },
   "workflow_stage": "capture_process_completed",
   "workflow_steps": {
     "policies": "success",
@@ -806,6 +811,6 @@
     "download": "success",
     "capture": "success"
   },
-  "workflow_run_id": "42315318886",
-  "workflow_head_sha": "9d626d325cc659fff4a7a5ef978d2a1ba719a757"
+  "workflow_run_id": "42374346854",
+  "workflow_head_sha": "1c9bb72b3e068f28573fcfba17d089e1b4854374"
 }
