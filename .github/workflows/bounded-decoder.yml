@@ -1,0 +1,66 @@
+name: Recover pinned routing with bounded AST interpretation
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/bounded-decoder.yml
+      - tools/bounded_route_decoder.cjs
+      - tools/test_bounded_route_decoder.cjs
+      - tools/run_bounded_decoder.py
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: kofum-lat-bounded-decoder
+  cancel-in-progress: false
+jobs:
+  recover:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '20.20.1'
+      - name: Recover only pinned source lists without destination contact
+        timeout-minutes: 3
+        run: |
+          mkdir -p analysis "$RUNNER_TEMP/kofum-bounded-home"
+          env -i PATH="$PATH" HOME="$RUNNER_TEMP/kofum-bounded-home" TMPDIR="$RUNNER_TEMP" python3 tools/run_bounded_decoder.py
+      - name: Publish bounded decoder report only
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ github.run_id }}
+          HEAD_SHA: ${{ github.sha }}
+        run: |
+          python3 - <<'PY'
+          import json, os, re
+          from pathlib import Path
+          p=Path('analysis/bounded-decoder-report.json')
+          data=json.loads(p.read_text())
+          if re.fullmatch(r'[0-9]+',os.environ['RUN_ID']): data['workflow_run_id']=os.environ['RUN_ID']
+          if re.fullmatch(r'[0-9a-f]{40}',os.environ['HEAD_SHA']): data['workflow_head_sha']=os.environ['HEAD_SHA']
+          p.write_text(json.dumps(data,indent=2)+'\n')
+          PY
+          endpoint=repos/eagleblue2024-pixel/kofum-lat/contents/analysis/bounded-decoder-report.json
+          if gh api "$endpoint?ref=main" > "$RUNNER_TEMP/kofum-bounded-remote.json" 2> "$RUNNER_TEMP/kofum-bounded-get-error.txt"; then
+            sha=$(jq -r .sha "$RUNNER_TEMP/kofum-bounded-remote.json")
+          elif grep -q 'HTTP 404' "$RUNNER_TEMP/kofum-bounded-get-error.txt"; then
+            sha=''
+          else
+            echo report_metadata_read_failed
+            exit 1
+          fi
+          content=$(base64 -w0 analysis/bounded-decoder-report.json)
+          jq -n --arg content "$content" --arg sha "$sha" '{message:"chore: publish bounded decoder result",branch:"main",content:$content} + (if $sha=="" then {} else {sha:$sha} end)' > "$RUNNER_TEMP/kofum-bounded-payload.json"
+          gh api --method PUT "$endpoint" --input "$RUNNER_TEMP/kofum-bounded-payload.json" > /dev/null
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bounded-decoder-report-${{ github.run_id }}-${{ github.run_attempt }}
+          path: analysis/bounded-decoder-report.json
+          if-no-files-found: warn
+          retention-days: 14
