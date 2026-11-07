@@ -2,8 +2,8 @@
   "status": "decoder_relationships_observed",
   "scope": "AST relationships only; no source functions executed, no destination contact, no keys, indices or source values published. Not a routing resolver or playback test.",
   "self_test": {
-    "passed": 19,
-    "total": 19
+    "passed": 34,
+    "total": 34
   },
   "main_script_sha256": "15b9ce8846e132e81a1f3bcad60f26e26ed8752dd2dc93f78b1b64284a1ef796",
   "main_script_characters": 71214,
@@ -62,18 +62,308 @@
             "element_count": 3,
             "element_relationships": [
               {
+                "expression": {
+                  "type": "BinaryExpression",
+                  "operator": "+",
+                  "left": {
+                    "type": "BinaryExpression",
+                    "operator": "+",
+                    "left": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier",
+                        "role": "function_name_match",
+                        "binding_evidence": {
+                          "variable_declarations": 0,
+                          "identifier_writes": 0,
+                          "function_declarations": 1
+                        }
+                      },
+                      "argument_count": 5,
+                      "arguments": [
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "string"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        }
+                      ]
+                    },
+                    "right": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier",
+                        "role": "function_name_match",
+                        "binding_evidence": {
+                          "variable_declarations": 0,
+                          "identifier_writes": 0,
+                          "function_declarations": 1
+                        }
+                      },
+                      "argument_count": 5,
+                      "arguments": [
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "string"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        }
+                      ]
+                    }
+                  },
+                  "right": {
+                    "type": "Literal",
+                    "value_kind": "string"
+                  }
+                },
                 "kind": "other_expression"
               },
               {
+                "expression": {
+                  "type": "BinaryExpression",
+                  "operator": "+",
+                  "left": {
+                    "type": "BinaryExpression",
+                    "operator": "+",
+                    "left": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier",
+                        "role": "function_name_match",
+                        "binding_evidence": {
+                          "variable_declarations": 0,
+                          "identifier_writes": 0,
+                          "function_declarations": 1
+                        }
+                      },
+                      "argument_count": 5,
+                      "arguments": [
+                        {
+                          "type": "Literal",
+                          "value_kind": "string"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        }
+                      ]
+                    },
+                    "right": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier",
+                        "role": "function_name_match",
+                        "binding_evidence": {
+                          "variable_declarations": 0,
+                          "identifier_writes": 0,
+                          "function_declarations": 1
+                        }
+                      },
+                      "argument_count": 5,
+                      "arguments": [
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "string"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        }
+                      ]
+                    }
+                  },
+                  "right": {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "role": "function_name_match",
+                      "binding_evidence": {
+                        "variable_declarations": 0,
+                        "identifier_writes": 0,
+                        "function_declarations": 1
+                      }
+                    },
+                    "argument_count": 5,
+                    "arguments": [
+                      {
+                        "type": "Literal",
+                        "value_kind": "string"
+                      },
+                      {
+                        "type": "UnaryExpression",
+                        "operator": "-",
+                        "argument": {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        }
+                      },
+                      {
+                        "type": "UnaryExpression",
+                        "operator": "-",
+                        "argument": {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        }
+                      },
+                      {
+                        "type": "Literal",
+                        "value_kind": "number"
+                      },
+                      {
+                        "type": "UnaryExpression",
+                        "operator": "-",
+                        "argument": {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        }
+                      }
+                    ]
+                  }
+                },
                 "kind": "other_expression"
               },
               {
+                "expression": {
+                  "type": "BinaryExpression",
+                  "operator": "+",
+                  "left": {
+                    "type": "BinaryExpression",
+                    "operator": "+",
+                    "left": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier",
+                        "role": "function_name_match",
+                        "binding_evidence": {
+                          "variable_declarations": 0,
+                          "identifier_writes": 0,
+                          "function_declarations": 1
+                        }
+                      },
+                      "argument_count": 5,
+                      "arguments": [
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "string"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        }
+                      ]
+                    },
+                    "right": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier",
+                        "role": "function_name_match",
+                        "binding_evidence": {
+                          "variable_declarations": 0,
+                          "identifier_writes": 0,
+                          "function_declarations": 1
+                        }
+                      },
+                      "argument_count": 5,
+                      "arguments": [
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "string"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        }
+                      ]
+                    }
+                  },
+                  "right": {
+                    "type": "Literal",
+                    "value_kind": "string"
+                  }
+                },
                 "kind": "other_expression"
               }
             ]
           }
         ],
-        "method_call_syntax": {}
+        "method_call_syntax": {},
+        "method_call_shapes": []
       },
       "dmca": {
         "binding_write_count": 1,
@@ -83,24 +373,588 @@
             "element_count": 5,
             "element_relationships": [
               {
+                "expression": {
+                  "type": "BinaryExpression",
+                  "operator": "+",
+                  "left": {
+                    "type": "BinaryExpression",
+                    "operator": "+",
+                    "left": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier",
+                        "role": "function_name_match",
+                        "binding_evidence": {
+                          "variable_declarations": 0,
+                          "identifier_writes": 0,
+                          "function_declarations": 1
+                        }
+                      },
+                      "argument_count": 5,
+                      "arguments": [
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "string"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        }
+                      ]
+                    },
+                    "right": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier",
+                        "role": "function_name_match",
+                        "binding_evidence": {
+                          "variable_declarations": 0,
+                          "identifier_writes": 0,
+                          "function_declarations": 1
+                        }
+                      },
+                      "argument_count": 5,
+                      "arguments": [
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "string"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        }
+                      ]
+                    }
+                  },
+                  "right": {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "role": "function_name_match",
+                      "binding_evidence": {
+                        "variable_declarations": 0,
+                        "identifier_writes": 0,
+                        "function_declarations": 1
+                      }
+                    },
+                    "argument_count": 5,
+                    "arguments": [
+                      {
+                        "type": "Literal",
+                        "value_kind": "number"
+                      },
+                      {
+                        "type": "Literal",
+                        "value_kind": "number"
+                      },
+                      {
+                        "type": "Literal",
+                        "value_kind": "number"
+                      },
+                      {
+                        "type": "Literal",
+                        "value_kind": "string"
+                      },
+                      {
+                        "type": "Literal",
+                        "value_kind": "number"
+                      }
+                    ]
+                  }
+                },
                 "kind": "other_expression"
               },
               {
+                "expression": {
+                  "type": "BinaryExpression",
+                  "operator": "+",
+                  "left": {
+                    "type": "BinaryExpression",
+                    "operator": "+",
+                    "left": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier",
+                        "role": "function_name_match",
+                        "binding_evidence": {
+                          "variable_declarations": 0,
+                          "identifier_writes": 0,
+                          "function_declarations": 1
+                        }
+                      },
+                      "argument_count": 5,
+                      "arguments": [
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "string"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        }
+                      ]
+                    },
+                    "right": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier",
+                        "role": "function_name_match",
+                        "binding_evidence": {
+                          "variable_declarations": 0,
+                          "identifier_writes": 0,
+                          "function_declarations": 1
+                        }
+                      },
+                      "argument_count": 5,
+                      "arguments": [
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "UnaryExpression",
+                          "operator": "-",
+                          "argument": {
+                            "type": "Literal",
+                            "value_kind": "number"
+                          }
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "string"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        }
+                      ]
+                    }
+                  },
+                  "right": {
+                    "type": "Literal",
+                    "value_kind": "string"
+                  }
+                },
                 "kind": "other_expression"
               },
               {
+                "expression": {
+                  "type": "BinaryExpression",
+                  "operator": "+",
+                  "left": {
+                    "type": "BinaryExpression",
+                    "operator": "+",
+                    "left": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier",
+                        "role": "function_name_match",
+                        "binding_evidence": {
+                          "variable_declarations": 0,
+                          "identifier_writes": 0,
+                          "function_declarations": 1
+                        }
+                      },
+                      "argument_count": 5,
+                      "arguments": [
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "string"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        }
+                      ]
+                    },
+                    "right": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier",
+                        "role": "function_name_match",
+                        "binding_evidence": {
+                          "variable_declarations": 0,
+                          "identifier_writes": 0,
+                          "function_declarations": 1
+                        }
+                      },
+                      "argument_count": 5,
+                      "arguments": [
+                        {
+                          "type": "UnaryExpression",
+                          "operator": "-",
+                          "argument": {
+                            "type": "Literal",
+                            "value_kind": "number"
+                          }
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "string"
+                        },
+                        {
+                          "type": "UnaryExpression",
+                          "operator": "-",
+                          "argument": {
+                            "type": "Literal",
+                            "value_kind": "number"
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "right": {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "role": "function_name_match",
+                      "binding_evidence": {
+                        "variable_declarations": 0,
+                        "identifier_writes": 0,
+                        "function_declarations": 1
+                      }
+                    },
+                    "argument_count": 5,
+                    "arguments": [
+                      {
+                        "type": "UnaryExpression",
+                        "operator": "-",
+                        "argument": {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        }
+                      },
+                      {
+                        "type": "UnaryExpression",
+                        "operator": "-",
+                        "argument": {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        }
+                      },
+                      {
+                        "type": "UnaryExpression",
+                        "operator": "-",
+                        "argument": {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        }
+                      },
+                      {
+                        "type": "Literal",
+                        "value_kind": "string"
+                      },
+                      {
+                        "type": "UnaryExpression",
+                        "operator": "-",
+                        "argument": {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        }
+                      }
+                    ]
+                  }
+                },
                 "kind": "other_expression"
               },
               {
+                "expression": {
+                  "type": "BinaryExpression",
+                  "operator": "+",
+                  "left": {
+                    "type": "BinaryExpression",
+                    "operator": "+",
+                    "left": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier",
+                        "role": "function_name_match",
+                        "binding_evidence": {
+                          "variable_declarations": 0,
+                          "identifier_writes": 0,
+                          "function_declarations": 1
+                        }
+                      },
+                      "argument_count": 5,
+                      "arguments": [
+                        {
+                          "type": "UnaryExpression",
+                          "operator": "-",
+                          "argument": {
+                            "type": "Literal",
+                            "value_kind": "number"
+                          }
+                        },
+                        {
+                          "type": "UnaryExpression",
+                          "operator": "-",
+                          "argument": {
+                            "type": "Literal",
+                            "value_kind": "number"
+                          }
+                        },
+                        {
+                          "type": "UnaryExpression",
+                          "operator": "-",
+                          "argument": {
+                            "type": "Literal",
+                            "value_kind": "number"
+                          }
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "string"
+                        },
+                        {
+                          "type": "UnaryExpression",
+                          "operator": "-",
+                          "argument": {
+                            "type": "Literal",
+                            "value_kind": "number"
+                          }
+                        }
+                      ]
+                    },
+                    "right": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier",
+                        "role": "function_name_match",
+                        "binding_evidence": {
+                          "variable_declarations": 0,
+                          "identifier_writes": 0,
+                          "function_declarations": 1
+                        }
+                      },
+                      "argument_count": 5,
+                      "arguments": [
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "string"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        }
+                      ]
+                    }
+                  },
+                  "right": {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "role": "function_name_match",
+                      "binding_evidence": {
+                        "variable_declarations": 0,
+                        "identifier_writes": 0,
+                        "function_declarations": 1
+                      }
+                    },
+                    "argument_count": 5,
+                    "arguments": [
+                      {
+                        "type": "Literal",
+                        "value_kind": "number"
+                      },
+                      {
+                        "type": "Literal",
+                        "value_kind": "number"
+                      },
+                      {
+                        "type": "Literal",
+                        "value_kind": "string"
+                      },
+                      {
+                        "type": "Literal",
+                        "value_kind": "number"
+                      },
+                      {
+                        "type": "Literal",
+                        "value_kind": "number"
+                      }
+                    ]
+                  }
+                },
                 "kind": "other_expression"
               },
               {
+                "expression": {
+                  "type": "BinaryExpression",
+                  "operator": "+",
+                  "left": {
+                    "type": "BinaryExpression",
+                    "operator": "+",
+                    "left": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier",
+                        "role": "function_name_match",
+                        "binding_evidence": {
+                          "variable_declarations": 0,
+                          "identifier_writes": 0,
+                          "function_declarations": 1
+                        }
+                      },
+                      "argument_count": 5,
+                      "arguments": [
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "string"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        }
+                      ]
+                    },
+                    "right": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier",
+                        "role": "function_name_match",
+                        "binding_evidence": {
+                          "variable_declarations": 0,
+                          "identifier_writes": 0,
+                          "function_declarations": 1
+                        }
+                      },
+                      "argument_count": 5,
+                      "arguments": [
+                        {
+                          "type": "Literal",
+                          "value_kind": "string"
+                        },
+                        {
+                          "type": "UnaryExpression",
+                          "operator": "-",
+                          "argument": {
+                            "type": "Literal",
+                            "value_kind": "number"
+                          }
+                        },
+                        {
+                          "type": "UnaryExpression",
+                          "operator": "-",
+                          "argument": {
+                            "type": "Literal",
+                            "value_kind": "number"
+                          }
+                        },
+                        {
+                          "type": "UnaryExpression",
+                          "operator": "-",
+                          "argument": {
+                            "type": "Literal",
+                            "value_kind": "number"
+                          }
+                        },
+                        {
+                          "type": "UnaryExpression",
+                          "operator": "-",
+                          "argument": {
+                            "type": "Literal",
+                            "value_kind": "number"
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "right": {
+                    "type": "Literal",
+                    "value_kind": "string"
+                  }
+                },
                 "kind": "other_expression"
               }
             ]
           }
         ],
-        "method_call_syntax": {}
+        "method_call_syntax": {},
+        "method_call_shapes": []
       },
       "rules": {
         "binding_write_count": 1,
@@ -110,12 +964,250 @@
             "element_count": 3,
             "element_relationships": [
               {
+                "expression": {
+                  "type": "BinaryExpression",
+                  "operator": "+",
+                  "left": {
+                    "type": "BinaryExpression",
+                    "operator": "+",
+                    "left": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier",
+                        "role": "function_name_match",
+                        "binding_evidence": {
+                          "variable_declarations": 0,
+                          "identifier_writes": 0,
+                          "function_declarations": 1
+                        }
+                      },
+                      "argument_count": 5,
+                      "arguments": [
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "string"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        }
+                      ]
+                    },
+                    "right": {
+                      "type": "CallExpression",
+                      "callee": {
+                        "type": "Identifier",
+                        "role": "function_name_match",
+                        "binding_evidence": {
+                          "variable_declarations": 0,
+                          "identifier_writes": 0,
+                          "function_declarations": 1
+                        }
+                      },
+                      "argument_count": 5,
+                      "arguments": [
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "string"
+                        },
+                        {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        }
+                      ]
+                    }
+                  },
+                  "right": {
+                    "type": "Literal",
+                    "value_kind": "string"
+                  }
+                },
                 "kind": "other_expression"
               },
               {
+                "expression": {
+                  "type": "BinaryExpression",
+                  "operator": "+",
+                  "left": {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "role": "function_name_match",
+                      "binding_evidence": {
+                        "variable_declarations": 0,
+                        "identifier_writes": 0,
+                        "function_declarations": 1
+                      }
+                    },
+                    "argument_count": 5,
+                    "arguments": [
+                      {
+                        "type": "Literal",
+                        "value_kind": "number"
+                      },
+                      {
+                        "type": "Literal",
+                        "value_kind": "number"
+                      },
+                      {
+                        "type": "Literal",
+                        "value_kind": "string"
+                      },
+                      {
+                        "type": "Literal",
+                        "value_kind": "number"
+                      },
+                      {
+                        "type": "Literal",
+                        "value_kind": "number"
+                      }
+                    ]
+                  },
+                  "right": {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "role": "function_name_match",
+                      "binding_evidence": {
+                        "variable_declarations": 0,
+                        "identifier_writes": 0,
+                        "function_declarations": 1
+                      }
+                    },
+                    "argument_count": 5,
+                    "arguments": [
+                      {
+                        "type": "Literal",
+                        "value_kind": "number"
+                      },
+                      {
+                        "type": "Literal",
+                        "value_kind": "number"
+                      },
+                      {
+                        "type": "Literal",
+                        "value_kind": "number"
+                      },
+                      {
+                        "type": "Literal",
+                        "value_kind": "string"
+                      },
+                      {
+                        "type": "Literal",
+                        "value_kind": "number"
+                      }
+                    ]
+                  }
+                },
                 "kind": "other_expression"
               },
               {
+                "expression": {
+                  "type": "BinaryExpression",
+                  "operator": "+",
+                  "left": {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "role": "function_name_match",
+                      "binding_evidence": {
+                        "variable_declarations": 0,
+                        "identifier_writes": 0,
+                        "function_declarations": 1
+                      }
+                    },
+                    "argument_count": 5,
+                    "arguments": [
+                      {
+                        "type": "Literal",
+                        "value_kind": "string"
+                      },
+                      {
+                        "type": "Literal",
+                        "value_kind": "number"
+                      },
+                      {
+                        "type": "Literal",
+                        "value_kind": "number"
+                      },
+                      {
+                        "type": "UnaryExpression",
+                        "operator": "-",
+                        "argument": {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        }
+                      },
+                      {
+                        "type": "UnaryExpression",
+                        "operator": "-",
+                        "argument": {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        }
+                      }
+                    ]
+                  },
+                  "right": {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "role": "function_name_match",
+                      "binding_evidence": {
+                        "variable_declarations": 0,
+                        "identifier_writes": 0,
+                        "function_declarations": 1
+                      }
+                    },
+                    "argument_count": 5,
+                    "arguments": [
+                      {
+                        "type": "Literal",
+                        "value_kind": "number"
+                      },
+                      {
+                        "type": "Literal",
+                        "value_kind": "number"
+                      },
+                      {
+                        "type": "Literal",
+                        "value_kind": "string"
+                      },
+                      {
+                        "type": "Literal",
+                        "value_kind": "number"
+                      },
+                      {
+                        "type": "Literal",
+                        "value_kind": "number"
+                      }
+                    ]
+                  }
+                },
                 "kind": "other_expression"
               }
             ]
@@ -123,11 +1215,228 @@
         ],
         "method_call_syntax": {
           "unknown": 1
-        }
+        },
+        "method_call_shapes": [
+          {
+            "type": "CallExpression",
+            "callee": {
+              "type": "MemberExpression",
+              "computed": true,
+              "object": {
+                "type": "Identifier",
+                "role": "identifier_redacted",
+                "binding_evidence": {
+                  "variable_declarations": 1,
+                  "identifier_writes": 0,
+                  "function_declarations": 0,
+                  "initializer_type": "ArrayExpression"
+                }
+              },
+              "property": {
+                "type": "BinaryExpression",
+                "operator": "+",
+                "left": {
+                  "type": "CallExpression",
+                  "callee": {
+                    "type": "Identifier",
+                    "role": "function_name_match",
+                    "binding_evidence": {
+                      "variable_declarations": 0,
+                      "identifier_writes": 0,
+                      "function_declarations": 1
+                    }
+                  },
+                  "argument_count": 5,
+                  "arguments": [
+                    {
+                      "type": "Literal",
+                      "value_kind": "string"
+                    },
+                    {
+                      "type": "Literal",
+                      "value_kind": "number"
+                    },
+                    {
+                      "type": "UnaryExpression",
+                      "operator": "-",
+                      "argument": {
+                        "type": "Literal",
+                        "value_kind": "number"
+                      }
+                    },
+                    {
+                      "type": "UnaryExpression",
+                      "operator": "-",
+                      "argument": {
+                        "type": "Literal",
+                        "value_kind": "number"
+                      }
+                    },
+                    {
+                      "type": "UnaryExpression",
+                      "operator": "-",
+                      "argument": {
+                        "type": "Literal",
+                        "value_kind": "number"
+                      }
+                    }
+                  ]
+                },
+                "right": {
+                  "type": "CallExpression",
+                  "callee": {
+                    "type": "Identifier",
+                    "role": "function_name_match",
+                    "binding_evidence": {
+                      "variable_declarations": 0,
+                      "identifier_writes": 0,
+                      "function_declarations": 1
+                    }
+                  },
+                  "argument_count": 5,
+                  "arguments": [
+                    {
+                      "type": "Literal",
+                      "value_kind": "number"
+                    },
+                    {
+                      "type": "Literal",
+                      "value_kind": "number"
+                    },
+                    {
+                      "type": "UnaryExpression",
+                      "operator": "-",
+                      "argument": {
+                        "type": "Literal",
+                        "value_kind": "number"
+                      }
+                    },
+                    {
+                      "type": "Literal",
+                      "value_kind": "string"
+                    },
+                    {
+                      "type": "Literal",
+                      "value_kind": "number"
+                    }
+                  ]
+                }
+              }
+            },
+            "argument_count": 1,
+            "arguments": [
+              {
+                "type": "MemberExpression",
+                "computed": true,
+                "object": {
+                  "type": "Identifier",
+                  "role": "identifier_redacted",
+                  "binding_evidence": {
+                    "variable_declarations": 1,
+                    "identifier_writes": 0,
+                    "function_declarations": 0,
+                    "initializer_type": "NewExpression"
+                  }
+                },
+                "property": {
+                  "type": "BinaryExpression",
+                  "operator": "+",
+                  "left": {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "role": "function_name_match",
+                      "binding_evidence": {
+                        "variable_declarations": 0,
+                        "identifier_writes": 0,
+                        "function_declarations": 1
+                      }
+                    },
+                    "argument_count": 5,
+                    "arguments": [
+                      {
+                        "type": "Literal",
+                        "value_kind": "number"
+                      },
+                      {
+                        "type": "UnaryExpression",
+                        "operator": "-",
+                        "argument": {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        }
+                      },
+                      {
+                        "type": "UnaryExpression",
+                        "operator": "-",
+                        "argument": {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        }
+                      },
+                      {
+                        "type": "Literal",
+                        "value_kind": "string"
+                      },
+                      {
+                        "type": "UnaryExpression",
+                        "operator": "-",
+                        "argument": {
+                          "type": "Literal",
+                          "value_kind": "number"
+                        }
+                      }
+                    ]
+                  },
+                  "right": {
+                    "type": "CallExpression",
+                    "callee": {
+                      "type": "Identifier",
+                      "role": "function_name_match",
+                      "binding_evidence": {
+                        "variable_declarations": 0,
+                        "identifier_writes": 0,
+                        "function_declarations": 1
+                      }
+                    },
+                    "argument_count": 5,
+                    "arguments": [
+                      {
+                        "type": "Literal",
+                        "value_kind": "number"
+                      },
+                      {
+                        "type": "Literal",
+                        "value_kind": "number"
+                      },
+                      {
+                        "type": "Literal",
+                        "value_kind": "string"
+                      },
+                      {
+                        "type": "Literal",
+                        "value_kind": "number"
+                      },
+                      {
+                        "type": "Literal",
+                        "value_kind": "number"
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        ]
       }
+    },
+    "expression_shape_limits": {
+      "expanded_nodes_per_expression": 64,
+      "max_depth": 7,
+      "arguments_per_call": 8
     },
     "scope": "Syntactic relationships only, not proof of binding identity, execution order, immutability, decryption or runtime routing. No source values, keys, indices, identifiers or URLs published; no source functions invoked."
   },
-  "workflow_run_id": "42378345135",
-  "workflow_head_sha": "d24ad3f37cbd0537962d4404b23634c1bb60cdf4"
+  "workflow_run_id": "42383040592",
+  "workflow_head_sha": "9cb1b9d3f0806add069dd3c6932707440cf2576d"
 }
