@@ -22,23 +22,47 @@
     "total": 19
   },
   "self_test": {
-    "passed": 82,
-    "total": 82,
+    "passed": 89,
+    "total": 89,
     "base_cases": 47,
     "diagnostic_cases": 5,
     "prototype_cases": 11,
-    "coercion_cases": 19
+    "coercion_cases": 19,
+    "constructor_cases": 7
   },
   "prototype_policy": "normal_modeled_function_read_only_inert_object",
   "coercion_policy": "bounded_plain_object_tag_array_join_source_function_text_no_hooks",
   "interpreter_provenance": {
     "repository_sha256": "90df7274a5d9b12b11eb6df94eef40487d1e963d295f90ffd07b6c569853f031",
-    "effective_sha256": "4a7b2a48decfd2498d4124cb17204dad4c6ba4a123fb27d0fd32e2a19ac0f8f6",
-    "instrumentation": "inert_prototype_bounded_default_coercion_and_rejection_enums"
+    "effective_sha256": "1d402e8b210a2241d75d64b2294e71c199942c3a55de646d86e8ae505cf7ecde",
+    "instrumentation": "inert_prototype_bounded_default_coercion_and_rejection_enums",
+    "constructor_context": "enum_only_before_invoke"
   },
   "main_script_sha256": "15b9ce8846e132e81a1f3bcad60f26e26ed8752dd2dc93f78b1b64284a1ef796",
   "code": "ast_new_unsupported",
   "failure_phase": "rotation",
-  "workflow_run_id": "42388110055",
-  "workflow_head_sha": "84c23dc165a353b8a27b706fc5d7c8d908027b5d"
+  "constructor_context_test": {
+    "passed": 7,
+    "total": 7
+  },
+  "constructor_diagnostics": "enum_only_rejection_before_invoke",
+  "constructor_rejection": {
+    "constructor_kind": "modeled_function",
+    "native_name": "not_applicable",
+    "callee_kind": "Identifier",
+    "argument_count": 1,
+    "argument_kinds": [
+      "modeled_function"
+    ],
+    "arguments_truncated": false,
+    "function_signature": {
+      "node_type": "FunctionExpression",
+      "parameter_count": 1,
+      "async": false,
+      "generator": false
+    },
+    "phase": "rotation"
+  },
+  "workflow_run_id": "42389787231",
+  "workflow_head_sha": "775b6be6063af66665bdcf4cc1650bd9585d244e"
 }
