@@ -7,6 +7,7 @@ on:
       - tools/bounded_route_decoder.cjs
       - tools/test_bounded_route_decoder.cjs
       - tools/run_bounded_decoder.py
+      - tools/run_constructor_probe.py
   workflow_dispatch:
 permissions:
   contents: write
@@ -28,7 +29,7 @@ jobs:
         timeout-minutes: 3
         run: |
           mkdir -p analysis "$RUNNER_TEMP/kofum-bounded-home"
-          env -i PATH="$PATH" HOME="$RUNNER_TEMP/kofum-bounded-home" TMPDIR="$RUNNER_TEMP" python3 tools/run_bounded_decoder.py
+          env -i PATH="$PATH" HOME="$RUNNER_TEMP/kofum-bounded-home" TMPDIR="$RUNNER_TEMP" python3 tools/run_constructor_probe.py
       - name: Publish bounded decoder report only
         if: success()
         env:
