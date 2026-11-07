@@ -1,0 +1,65 @@
+name: Inspect static routing without source execution
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/static-routing.yml
+      - tools/static_routes.cjs
+      - tools/inspect_static_routes.py
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: kofum-lat-static-routing
+  cancel-in-progress: false
+jobs:
+  inspect:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '20.20.1'
+      - name: Inspect exact main script through existing pinned HTTPS policy
+        timeout-minutes: 2
+        run: |
+          mkdir -p analysis "$RUNNER_TEMP/kofum-static-home"
+          env -i PATH="$PATH" HOME="$RUNNER_TEMP/kofum-static-home" TMPDIR="$RUNNER_TEMP" python3 tools/inspect_static_routes.py
+      - name: Publish sanitized static report only
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ github.run_id }}
+          HEAD_SHA: ${{ github.sha }}
+        run: |
+          python3 - <<'PY'
+          import json, os, re
+          from pathlib import Path
+          p=Path('analysis/static-routing-report.json')
+          data=json.loads(p.read_text())
+          if re.fullmatch(r'[0-9]+',os.environ['RUN_ID']): data['workflow_run_id']=os.environ['RUN_ID']
+          if re.fullmatch(r'[0-9a-f]{40}',os.environ['HEAD_SHA']): data['workflow_head_sha']=os.environ['HEAD_SHA']
+          p.write_text(json.dumps(data,indent=2)+'\n')
+          PY
+          endpoint=repos/eagleblue2024-pixel/kofum-lat/contents/analysis/static-routing-report.json
+          if gh api "$endpoint?ref=main" > "$RUNNER_TEMP/kofum-static-remote.json" 2> "$RUNNER_TEMP/kofum-static-get-error.txt"; then
+            sha=$(jq -r .sha "$RUNNER_TEMP/kofum-static-remote.json")
+          elif grep -q 'HTTP 404' "$RUNNER_TEMP/kofum-static-get-error.txt"; then
+            sha=''
+          else
+            echo report_metadata_read_failed
+            exit 1
+          fi
+          content=$(base64 -w0 analysis/static-routing-report.json)
+          jq -n --arg content "$content" --arg sha "$sha" '{message:"chore: publish sanitized static routing report",branch:"main",content:$content} + (if $sha=="" then {} else {sha:$sha} end)' > "$RUNNER_TEMP/kofum-static-payload.json"
+          gh api --method PUT "$endpoint" --input "$RUNNER_TEMP/kofum-static-payload.json" > /dev/null
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: static-routing-report-${{ github.run_id }}-${{ github.run_attempt }}
+          path: analysis/static-routing-report.json
+          if-no-files-found: warn
+          retention-days: 14
