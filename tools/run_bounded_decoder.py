@@ -1,4 +1,4 @@
-"""Run the bounded decoder with enum-only rejection instrumentation; never relax policy."""
+"""Model only inert prototype data on ordinary source functions; keep native escapes blocked."""
 import hashlib
 import json
 import re
@@ -14,6 +14,7 @@ RECEIVERS={'function','object','array','string','number','boolean','undefined','
 OPERATIONS={'read','write','other'}
 PHASES={'rotation','route_main','route_dmca','route_rules','unclassified'}
 NEW_PROPERTY="function property(k,receiver,operation='other'){k=string(k);if(k.length>1024||banned.has(k)){const receiver_kind=receiver instanceof Fn?'function':receiver instanceof Native?'native_function':receiver instanceof Obj?'object':Array.isArray(receiver)?'array':receiver===null?'null':['string','number','boolean','undefined'].includes(typeof receiver)?typeof receiver:'other';fatal('ast_property_forbidden',{property_class:k.length>1024?'oversized_key':k,receiver_kind,operation});}return k;}"
+NEW_READ_PREFIX="function read(obj,k){tick();if(k==='prototype'&&obj instanceof Fn&&obj.node&&['FunctionDeclaration','FunctionExpression'].includes(obj.node.type)&&!obj.node.async&&!obj.node.generator){if(!obj.p.has('prototype')){if(++allocations>10000)fatal('ast_allocation_limit');obj.p.set('prototype',new Obj());}return obj.p.get('prototype');}k=property(k,obj,'read');"
 PROBES=r"""
 'use strict';
 const assert=require('node:assert/strict'),acorn=require('internal/deps/acorn/acorn/dist/acorn'),model=require('./bounded_route_decoder.cjs');
@@ -27,6 +28,21 @@ const fixture='function table(){var a=["one.fixture.net"];return a;}function _0x
 let blocked;try{model.recover(fixture,{pin:null,limit:2000});}catch(e){blocked=e;}
 assert(blocked instanceof model.Fatal);assert.equal(blocked.code,'ast_property_forbidden');assert.equal(blocked.phase,'rotation');assert.equal(blocked.blocked_access.receiver_kind,'function');passed++;
 process.stdout.write(JSON.stringify({passed,total:5}));
+"""
+PROTOTYPE_PROBES=r"""
+'use strict';
+const assert=require('node:assert/strict'),acorn=require('internal/deps/acorn/acorn/dist/acorn'),model=require('./bounded_route_decoder.cjs');let passed=0;
+function evaluate(source,expression){const ast=acorn.parse(source,{ecmaVersion:'latest'}),m=model.machine(source,20000);m.hoist(ast.body,m.global,true);return m.expr(acorn.parse('('+expression+')',{ecmaVersion:'latest'}).body[0].expression,m.global);}
+for(const [source,expression,expected] of [
+ ['function f(){}','f.prototype===f.prototype',true],
+ ['function f(){}function g(){}','f.prototype===g.prototype',false],
+ ['function f(){}function g(){}function run(){f.prototype.cache="local";return g.prototype.cache;}','run()',undefined],
+ ['function f(){}function run(){f.prototype.count=7;return f.prototype.count;}','run()',7]
+]){assert.deepEqual(evaluate(source,expression),expected);passed++;}
+for(const expression of ['f.prototype.constructor','f.prototype.__proto__','f.prototype.prototype','String.prototype','Array.prototype','f.prototype={}']){let blocked;try{evaluate('function f(){}',expression);}catch(e){blocked=e;}assert(blocked instanceof model.Fatal);assert.equal(blocked.code,'ast_property_forbidden');passed++;}
+const fixture='function table(){var a=["one.fixture.net"];return a;}function _0x5447(i,k){return table()[i];}(function(t){t.prototype.cache=1;})(table);const main=["one.fixture.net"],dmca=["two.fixture.net"],rules=["three.fixture.net"];';
+const report=model.recover(fixture,{pin:null,limit:20000});assert.deepEqual(report.lists,{main:['one.fixture.net'],dmca:['two.fixture.net'],rules:['three.fixture.net']});passed++;
+process.stdout.write(JSON.stringify({passed,total:11}));
 """
 
 def invoke(filename,source='',timeout=60):
@@ -45,7 +61,7 @@ def replace_once(text,old,new):
 def instrument(source):
     source=replace_once(source,"function fatal(code){throw new Fatal(code);}","function fatal(code,detail){const error=new Fatal(code);if(detail)error.blocked_access=detail;throw error;}")
     source=replace_once(source,"function property(k){k=string(k);if(k.length>1024||banned.has(k))fatal('ast_property_forbidden');return k;}",NEW_PROPERTY)
-    source=replace_once(source,"function read(obj,k){tick();k=property(k);","function read(obj,k){tick();k=property(k,obj,'read');")
+    source=replace_once(source,"function read(obj,k){tick();k=property(k);",NEW_READ_PREFIX)
     source=replace_once(source,"function write(obj,k,value){tick();k=property(k);guard(value);","function write(obj,k,value){tick();k=property(k,obj,'write');guard(value);")
     source=replace_once(source,"if(e instanceof Fatal)throw e;fatal('ast_rotation_evaluation_failed');","if(e instanceof Fatal){e.phase='rotation';throw e;}fatal('ast_rotation_evaluation_failed');")
     source=replace_once(source,"if(e instanceof Fatal)throw e;fatal('ast_route_evaluation_failed');","if(e instanceof Fatal){e.phase='route_'+name;throw e;}fatal('ast_route_evaluation_failed');")
@@ -64,21 +80,24 @@ def clean_access(data):
     return {**{key:detail[key] for key in ('property_class','receiver_kind','operation')},'phase':data.get('phase') if data.get('phase') in PHASES else 'unclassified'}
 
 def run():
-    report={'status':'not_completed','scope':'Selected source AST operations are modeled under unchanged data/step/time limits. Rejected-access diagnostics contain fixed enums only. No eval or Function, no browser, no destination requests or playback.'}
+    report={'status':'not_completed','scope':'Selected source AST operations are modeled under unchanged data/step/time limits. Only normal modeled-function prototype reads yield isolated data objects. Native prototypes, constructor, __proto__ and prototype replacement stay blocked. No eval or Function, no browser, no destination requests or playback.'}
     private={}
     try:
         report['base_self_test']=check_tests('test_bounded_route_decoder.cjs',47)
         original=(HERE/'bounded_route_decoder.cjs').read_text(encoding='utf-8')
         patched=instrument(original)
-        with tempfile.TemporaryDirectory(prefix='kofum-bounded-rejection-') as directory:
+        with tempfile.TemporaryDirectory(prefix='kofum-bounded-prototype-') as directory:
             directory=Path(directory)
             helper=directory/'bounded_route_decoder.cjs';helper.write_text(patched,encoding='utf-8');helper.chmod(0o600)
             tests=directory/'test_bounded_route_decoder.cjs';tests.write_bytes((HERE/'test_bounded_route_decoder.cjs').read_bytes());tests.chmod(0o600)
             probes=directory/'probe_rejected_access.cjs';probes.write_text(PROBES,encoding='utf-8');probes.chmod(0o600)
+            prototype=directory/'probe_inert_prototype.cjs';prototype.write_text(PROTOTYPE_PROBES,encoding='utf-8');prototype.chmod(0o600)
             report['instrumented_regression_test']=check_tests(tests,47)
             report['rejection_diagnostic_test']=check_tests(probes,5)
-            report['self_test']={'passed':52,'total':52,'base_cases':47,'diagnostic_cases':5}
-            report['interpreter_provenance']={'repository_sha256':hashlib.sha256(original.encode('utf-8')).hexdigest(),'effective_sha256':hashlib.sha256(patched.encode('utf-8')).hexdigest(),'instrumentation':'rejected_property_enums_only'}
+            report['prototype_model_test']=check_tests(prototype,11)
+            report['self_test']={'passed':63,'total':63,'base_cases':47,'diagnostic_cases':5,'prototype_cases':11}
+            report['prototype_policy']='normal_modeled_function_read_only_inert_object'
+            report['interpreter_provenance']={'repository_sha256':hashlib.sha256(original.encode('utf-8')).hexdigest(),'effective_sha256':hashlib.sha256(patched.encode('utf-8')).hexdigest(),'instrumentation':'rejected_property_enums_and_inert_fn_prototype'}
             def capture(url,hosts,referer,stage,events):
                 text=base.fetch_text(url,hosts,referer,stage,events)
                 if stage=='main_script':private['source']=text
