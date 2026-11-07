@@ -61,6 +61,25 @@ jobs:
               raise RuntimeError('unexpected_url_validator_shape')
           new = r"function hls(value){if(value==='')return false;if(value.length>16000)fail('jw_url_length_rejected');if(/[^\x21-\x7e]/.test(value))fail('jw_url_characters_rejected');let p;try{p=new URL(value);}catch(_){if(value.startsWith('//'))fail('jw_url_network_relative_rejected');if(value.startsWith('/'))fail('jw_url_root_relative_rejected');if(value.startsWith('?'))fail('jw_url_query_relative_rejected');if(value.startsWith('#'))fail('jw_url_fragment_relative_rejected');if(/^[a-z][a-z0-9+.-]*:/i.test(value))fail('jw_url_absolute_malformed_rejected');fail('jw_url_path_relative_rejected');}if(p.protocol!=='https:')fail('jw_url_protocol_rejected');if(p.username||p.password)fail('jw_url_credentials_rejected');if(p.hash)fail('jw_url_fragment_rejected');if(p.port&&p.port!=='443')fail('jw_url_port_rejected');return p.pathname.toLowerCase().endsWith('.m3u8');}"
           source = source[:start] + new + source[end:]
+          root_helper = r'''function rootSource(value,origin=process.env.KOFUM_JW_ORIGIN){
+           if(!value.startsWith('/'))return value;
+           if(value.startsWith('//'))fail('jw_url_network_relative_rejected');
+           if(value.length>16000||/[^\x21-\x7e]/.test(value))fail('jw_url_relative_characters_rejected');
+           if(value.includes('\\'))fail('jw_url_relative_backslash_rejected');
+           if(/%(?:2f|5c)/i.test(value.split(/[?#]/,1)[0]))fail('jw_url_relative_encoded_separator_rejected');
+           if(!origin)fail('jw_url_relative_origin_missing');
+           let base;try{base=new URL(origin);}catch(_){fail('jw_url_relative_origin_rejected');}
+           if(base.protocol!=='https:'||base.port||origin!==base.origin+'/'||!['hglamioz.com','hgplaycdn.com','medixiru.com','niramirus.com','playnixes.com'].includes(base.hostname))fail('jw_url_relative_origin_rejected');
+           let resolved;try{resolved=new URL(value,base);}catch(_){fail('jw_url_relative_parse_rejected');}
+           if(resolved.origin!==base.origin||resolved.username||resolved.password||value.includes('#'))fail('jw_url_relative_components_rejected');
+           if(!resolved.pathname.toLowerCase().endsWith('.m3u8'))fail('jw_url_root_relative_not_hls');
+           return resolved.href;
+          }'''
+          static_marker = "function staticString(n){const value=primitive(n);if(typeof value!=='string')fail('jw_source_result_not_string');return value;}"
+          if source.count(static_marker)!=1:
+              raise RuntimeError('unexpected_static_string_shape')
+          source = source.replace(static_marker,static_marker.replace('return value;','return rootSource(value);'))
+          source = source.replace('function hls(value){',root_helper+'\nfunction hls(value){',1)
           marker = ' let passed=0;for(const source of positives)'
           total_marker = 'total:positives.length+negatives.length'
           if source.count(marker) != 1 or source.count(total_marker) != 1:
@@ -70,11 +89,17 @@ jobs:
            negatives.push(mixed(['']),mixed(['//cdn.fixture.net/master.m3u8',url]),mixed(['http://cdn.fixture.net/master.m3u8',url]),mixed(['',url,'https://cdn.fixture.net/other.m3u8']));
            const diagnosticCases=[['//cdn.fixture.net/master.m3u8','jw_url_network_relative_rejected'],['/master.m3u8','jw_url_root_relative_rejected'],['master.m3u8','jw_url_path_relative_rejected'],['?token=private','jw_url_query_relative_rejected'],['#private','jw_url_fragment_relative_rejected'],['https://','jw_url_absolute_malformed_rejected'],['https://[invalid]/master.m3u8','jw_url_absolute_malformed_rejected']];
            let diagnosticPassed=0;for(const [value,expected] of diagnosticCases){let actual='';try{hls(value);}catch(error){actual=error.message;}if(actual!==expected)fail('fixture_failed');diagnosticPassed++;}
+           const origin='https://playnixes.com/';
+           const rootCases=[['/master.m3u8',origin,origin+'master.m3u8'],['/MASTER.M3U8?token=private',origin,origin+'MASTER.M3U8?token=private'],['/master.m3u8?token=%2f',origin,origin+'master.m3u8?token=%2f'],['//other.fixture.net/master.m3u8',origin,'jw_url_network_relative_rejected'],['/\\other.fixture.net/master.m3u8',origin,'jw_url_relative_backslash_rejected'],['/%2f%2fother/master.m3u8',origin,'jw_url_relative_encoded_separator_rejected'],['/video.mp4',origin,'jw_url_root_relative_not_hls'],['/',origin,'jw_url_root_relative_not_hls'],['/master.m3u8#private',origin,'jw_url_relative_components_rejected'],['/master.m3u8?x= a',origin,'jw_url_relative_characters_rejected'],['/master.m3u8',null,'jw_url_relative_origin_missing'],['/master.m3u8','http://playnixes.com/','jw_url_relative_origin_rejected'],['/master.m3u8','https://other.fixture.net/','jw_url_relative_origin_rejected'],['/master.m3u8','https://u:p@playnixes.com/','jw_url_relative_origin_rejected'],['/master.m3u8','https://playnixes.com/sub/','jw_url_relative_origin_rejected'],['/master.m3u8','https://playnixes.com:444/','jw_url_relative_origin_rejected'],[url,null,url]];
+           for(const [value,base,expected] of rootCases){let actual;try{actual=rootSource(value,base);}catch(error){actual=error.message;}if(actual!==expected)fail('fixture_failed');diagnosticPassed++;}
+           const savedOrigin=process.env.KOFUM_JW_ORIGIN;
+           try{process.env.KOFUM_JW_ORIGIN=origin;if(extract(setup('"/master.m3u8?token=private"')).url!==origin+'master.m3u8?token=private')fail('fixture_failed');diagnosticPassed++;}
+           finally{if(savedOrigin===undefined)delete process.env.KOFUM_JW_ORIGIN;else process.env.KOFUM_JW_ORIGIN=savedOrigin;}
           '''
           source = source.replace(marker,extra+' let passed=diagnosticPassed;for(const source of positives)')
           source = source.replace(total_marker,total_marker+'+diagnosticPassed')
           p.write_text(source)
-          provenance = {'repository_sha256':repository_sha256,'effective_sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'runtime_transform':'url_shape_diagnostics_and_synthetic_fixtures'}
+          provenance = {'repository_sha256':repository_sha256,'effective_sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'runtime_transform':'same_origin_root_hls_and_url_diagnostics'}
           Path('analysis/jw-extractor-provenance.json').write_text(json.dumps(provenance)+'\n')
           PY
           node --expose-internals tools/extract_jw_hls.cjs --self-test
@@ -130,8 +155,8 @@ jobs:
           if provenance_file.exists():
               provenance = json.loads(provenance_file.read_text())
               clean = {key:provenance[key] for key in ('repository_sha256','effective_sha256') if isinstance(provenance.get(key),str) and re.fullmatch(r'[0-9a-f]{64}',provenance[key])}
-              if len(clean)==2 and provenance.get('runtime_transform')=='url_shape_diagnostics_and_synthetic_fixtures':
-                  clean['runtime_transform']='url_shape_diagnostics_and_synthetic_fixtures'
+              if len(clean)==2 and provenance.get('runtime_transform')=='same_origin_root_hls_and_url_diagnostics':
+                  clean['runtime_transform']='same_origin_root_hls_and_url_diagnostics'
                   data['jw_extractor_provenance']=clean
           stage_file = Path('analysis/browser-routing-stage.txt')
           stage = stage_file.read_text(encoding='utf-8').strip() if stage_file.exists() else 'initialization_not_completed'

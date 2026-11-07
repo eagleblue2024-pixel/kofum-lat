@@ -2,6 +2,7 @@
 import asyncio
 import hashlib
 import json
+import os
 import re
 import subprocess
 import sys
@@ -38,20 +39,23 @@ def transform(body):
     if data.get('status')!='instrumented' or not isinstance(data.get('source'),str):raise RuntimeError('ast_parser_failed')
     return data
 
-def source_from_packed(html,fallback):
+def source_from_packed(html,fallback,origin=None):
     import analyze_mainjs as base
     import follow_hglamioz as previous
+    from destination_inspection import APPROVED
     scripts=base.scripts_in(html)
     if len(scripts)>40:raise previous.ProbeError('jw_script_limit')
     bodies=[''.join(s['chunks']) for s in scripts if not s['attrs'].get('src')]
     bodies=[body for body in bodies if re.search(r'\beval\s*\(\s*function\b',body)]
     if not bodies:return fallback(html)
     if len(bodies)>4:raise previous.ProbeError('jw_packed_script_limit')
+    if not isinstance(origin,str) or origin not in {'https://'+host+'/' for host in APPROVED}:raise previous.ProbeError('jw_url_relative_origin_unavailable')
+    child_env={**os.environ,'KOFUM_JW_ORIGIN':origin}
     urls=set();extractor=Path(__file__).with_name('extract_jw_hls.cjs')
     for body in bodies:
         if len(body)>200000:raise previous.ProbeError('jw_packed_input_limit')
         try:
-            result=subprocess.run(['node','--expose-internals','--max-old-space-size=128',str(extractor)],input=body,text=True,capture_output=True,timeout=8)
+            result=subprocess.run(['node','--expose-internals','--max-old-space-size=128',str(extractor)],input=body,text=True,capture_output=True,timeout=8,env=child_env)
             if len(result.stdout)>100000:raise previous.ProbeError('jw_result_limit')
             data=json.loads(result.stdout)
         except previous.ProbeError:raise
@@ -63,7 +67,7 @@ def source_from_packed(html,fallback):
         if not isinstance(url,str):raise previous.ProbeError('jw_source_url_rejected')
         previous.safe_https(url);urls.add(url)
     if len(urls)!=1:raise previous.ProbeError('jw_hls_ambiguous')
-    return urls.pop(),{'method':'static_jw_setup_from_packed_ast','packed_blocks':len(bodies),'note':'Bounded statically resolved strings in JW configuration from a dictionary-decoding candidate. Playlist access is not proof of playback or movie identity. Signed source stays in memory.'}
+    return urls.pop(),{'method':'static_jw_setup_from_packed_ast','packed_blocks':len(bodies),'root_relative_policy':'hls_on_same_observed_https_origin_only','note':'Bounded statically resolved strings in JW configuration from a dictionary-decoding candidate. Playlist access is not proof of playback or movie identity. Signed source stays in memory.'}
 
 async def run():
     import analyze_mainjs as base
@@ -78,10 +82,13 @@ async def run():
     original_fetch=base.fetch_text;original_page=BrowserContext.new_page;original_targets=previous.TARGETS;original_source=previous.source_url
     def fetch(url,hosts,referer,stage,events):
         if stage=='destination':
+            private.pop('jw_origin',None)
             destination=base.checked_url(url,APPROVED)
             if not authorized(destination.hostname,recorder.summary()):raise base.AnalysisError('destination_not_in_observed_lists')
         body=original_fetch(url,hosts,referer,stage,events)
-        if stage=='destination':diagnostic.update(inspect(body,url))
+        if stage=='destination':
+            diagnostic.update(inspect(body,url))
+            private['jw_origin']='https://'+destination.hostname+'/'
         if stage=='server':
             private['main']=base.main_script(body,url)
             private['integrity']=any(entry['attrs'].get('integrity') and 'main.js' in entry['attrs'].get('src','') for entry in base.scripts_in(body))
@@ -98,7 +105,7 @@ async def run():
         page=await original_page(context,*args,**kwargs)
         await page.expose_function('__kofumReportRouteList',recorder.record)
         return page
-    base.fetch_text=fetch;BrowserContext.new_page=new_page;previous.TARGETS=APPROVED;previous.source_url=lambda html:source_from_packed(html,original_source)
+    base.fetch_text=fetch;BrowserContext.new_page=new_page;previous.TARGETS=APPROVED;previous.source_url=lambda html:source_from_packed(html,original_source,private.get('jw_origin'))
     try:report=await previous.run()
     finally:base.fetch_text=original_fetch;BrowserContext.new_page=original_page;previous.TARGETS=original_targets;previous.source_url=original_source
     report['routing_assignment_capture']=recorder.summary()
@@ -107,7 +114,7 @@ async def run():
     report['routing_capture_scope']='AST-based value observation at named main/dmca/rules initializers and assignments, including local scopes. Original values returned unchanged. No source publication.'
     report['destination_structure']=diagnostic
     report['jw_extractor_self_test']={'status':'passed','passed':test_data['passed'],'total':test_data['total']}
-    report['additional_scope']='Contact only the exact observed same-path HTTPS destination on the explicit five-host allowlist and same-run dmca list. Parse its HTML and packed data without executing destination scripts. Resolve only bounded literal strings, concatenations and uniquely initialized visible identifiers before use. Select one unambiguous static JW HLS source and pass it to existing pinned-HTTPS playlist verification. Playlist hosts come from that configuration and playlist variants; public DNS and TLS checks remain. No redirects, linked destination scripts, keys, segments or video requested. Signed URLs stay private.'
+    report['additional_scope']='Contact only the exact observed same-path HTTPS destination on the explicit five-host allowlist and same-run dmca list. Parse its HTML and packed data without executing destination scripts. Resolve only bounded literal strings, concatenations and uniquely initialized visible identifiers before use. Root-relative sources must resolve to .m3u8 on the same observed HTTPS origin; other relative forms are rejected. Select one unambiguous static JW HLS source and pass it to existing pinned-HTTPS playlist verification. Playlist hosts come from that configuration and playlist variants; public DNS and TLS checks remain. No redirects, linked destination scripts, keys, segments or video requested. Signed URLs stay private.'
     report['diagnostic_approved_hosts']=sorted(APPROVED)
     if 'original_sha256' in metadata:
         if metadata['status']=='instrumented' and 'main_script_sha256' in report:report['instrumented_main_before_tail_sha256']=report['main_script_sha256']
